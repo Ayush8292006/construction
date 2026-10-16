@@ -118,14 +118,14 @@ const Marquee = ({ items, duration = 55, className = '' }) => {
       <motion.div
         animate={{ x: ['0%', '-50%'] }}
         transition={{ duration, repeat: Infinity, ease: 'linear' }}
-        className="flex w-max items-center gap-10 whitespace-nowrap"
+        className="flex w-max items-center gap-6 md:gap-10 whitespace-nowrap"
       >
         {doubled.map((t, i) => (
-          <div key={i} className="flex items-center gap-10">
-            <span className="font-display font-semibold uppercase tracking-[0.18em] text-sm md:text-base">
+          <div key={i} className="flex items-center gap-6 md:gap-10">
+            <span className="font-display font-semibold uppercase tracking-[0.18em] text-xs sm:text-sm md:text-base">
               {t}
             </span>
-            <span className="w-1.5 h-1.5 rotate-45 bg-current opacity-40" />
+            <span className="w-1 h-1 md:w-1.5 md:h-1.5 rotate-45 bg-current opacity-40" />
           </div>
         ))}
       </motion.div>
@@ -171,7 +171,7 @@ const TiltCard = ({ children, className = '', max = 6, glare = 'rgba(230,126,34,
       {children}
       <motion.div
         style={{ background: bg }}
-        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20"
+        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 hidden md:block"
       />
     </motion.div>
   );
@@ -257,7 +257,7 @@ const RotatingWord = () => {
 };
 
 /* ============================================================
-   MAGNETIC + CTAs — calmer hover shift
+   MAGNETIC + CTAs
    ============================================================ */
 const Magnetic = ({ children }) => {
   const ref = useRef(null);
@@ -292,7 +292,7 @@ const PrimaryCTA = ({ to, children }) => {
     <Magnetic>
       <Link
         to={to}
-        className="group relative inline-flex items-center gap-3 px-8 py-4 text-white font-semibold text-sm tracking-wide overflow-hidden transition-colors"
+        className="group relative inline-flex items-center justify-center gap-3 px-6 py-3.5 sm:px-8 sm:py-4 text-white font-semibold text-sm tracking-wide overflow-hidden transition-colors"
         style={{ clipPath: ANGLE, background: C.ink }}
       >
         <span
@@ -310,7 +310,7 @@ const SecondaryCTA = ({ to, children }) => (
   <Magnetic>
     <Link
       to={to}
-      className="group relative inline-flex items-center gap-3 px-8 py-4 font-semibold text-sm tracking-wide overflow-hidden transition-colors duration-300 group-hover:text-white border"
+      className="group relative inline-flex items-center justify-center gap-3 px-6 py-3.5 sm:px-8 sm:py-4 font-semibold text-sm tracking-wide overflow-hidden transition-colors duration-300 group-hover:text-white border"
       style={{ clipPath: ANGLE, background: C.bgFrom, color: C.ink, borderColor: 'rgba(28,28,31,0.25)' }}
     >
       <span
@@ -345,17 +345,17 @@ const Stat = ({ value, suffix, label, delay }) => {
   return (
     <motion.div
       ref={ref}
-      className="group border-l-2 pl-4 transition-colors"
+      className="group border-l-2 pl-3 sm:pl-4 transition-colors"
       style={{ borderColor: 'rgba(28,28,31,0.18)' }}
     >
       <div
-        className="font-display font-extrabold text-3xl transition-colors group-hover:!text-[#E67E22]"
+        className="font-display font-extrabold text-2xl sm:text-3xl transition-colors group-hover:!text-[#E67E22]"
         style={{ color: C.ink }}
       >
         {n}
         {suffix}
       </div>
-      <div className="text-xs mt-1" style={{ color: C.inkSoft }}>
+      <div className="text-[10px] sm:text-xs mt-1" style={{ color: C.inkSoft }}>
         {label}
       </div>
     </motion.div>
@@ -363,7 +363,7 @@ const Stat = ({ value, suffix, label, delay }) => {
 };
 
 /* ============================================================
-   HERO SLIDER — no scan line, no orbit rings, no float, no floating tags
+   HERO SLIDER
    ============================================================ */
 const HeroSlider = () => {
   const reduce = useReducedMotion();
@@ -398,7 +398,7 @@ const HeroSlider = () => {
 
   return (
     <div
-      className="relative w-full h-[52vh] lg:h-[72vh] max-h-[680px]"
+      className="relative w-full h-[42vh] sm:h-[50vh] lg:h-[72vh] max-h-[680px]"
       style={{ perspective: '1200px' }}
     >
       <motion.div
@@ -408,7 +408,7 @@ const HeroSlider = () => {
         style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
         className="relative w-full h-full"
       >
-        <div className="absolute inset-8 bg-[#E67E22]/15 blur-[80px]" />
+        <div className="absolute inset-4 sm:inset-6 lg:inset-8 bg-[#E67E22]/15 blur-[60px] lg:blur-[80px]" />
 
         <div
           className="absolute inset-0"
@@ -445,15 +445,16 @@ const HeroSlider = () => {
           />
           <motion.div className="absolute inset-0 pointer-events-none" style={{ background: glare }} />
 
-          {/* Static capability strip — no floating */}
-          <div className="absolute bottom-7 left-7 hidden md:flex items-center gap-3">
+          {/* Static capability strip — hidden on smallest, shown sm+ */}
+          <div className="absolute bottom-5 sm:bottom-7 left-5 sm:left-7 hidden sm:flex items-center gap-2 sm:gap-3">
             <span className="w-1.5 h-1.5 rounded-full bg-[#E67E22]" />
-            <span className="text-white/70 text-[11px] font-medium tracking-[0.15em] uppercase">
-              Tanks · Reactors · Piping · Structures
+            <span className="text-white/70 text-[10px] sm:text-[11px] font-medium tracking-[0.15em] uppercase">
+              Tanks · Reactors · Piping
             </span>
           </div>
 
-          <div className="absolute bottom-7 right-8 flex items-baseline gap-1">
+          {/* Slide counter — bottom right on desktop */}
+          <div className="absolute bottom-5 sm:bottom-7 right-5 sm:right-8 hidden sm:flex items-baseline gap-1">
             <AnimatePresence mode="wait">
               <motion.span
                 key={current}
@@ -461,24 +462,25 @@ const HeroSlider = () => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -14, opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                className="text-white font-display font-bold text-2xl inline-block"
+                className="text-white font-display font-bold text-lg sm:text-2xl inline-block"
               >
                 {String(current + 1).padStart(2, '0')}
               </motion.span>
             </AnimatePresence>
-            <span className="text-white/50 text-xs">
+            <span className="text-white/50 text-[10px] sm:text-xs">
               / {String(heroImages.length).padStart(2, '0')}
             </span>
           </div>
 
-          <div className="absolute bottom-9 right-8 translate-y-7 flex gap-2">
+          {/* Progress bars — mobile bottom center, desktop bottom right */}
+          <div className="absolute bottom-4 sm:bottom-9 left-1/2 sm:left-auto -translate-x-1/2 sm:translate-x-0 sm:right-8 sm:translate-y-7 flex gap-1.5 sm:gap-2">
             {heroImages.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrent(i)}
                 aria-label={`Go to slide ${i + 1}`}
                 className="relative h-1 rounded-full bg-white/25 hover:bg-white/50 overflow-hidden"
-                style={{ width: i === current ? 44 : 12, transition: 'width 0.4s' }}
+                style={{ width: i === current ? 32 : 10, transition: 'width 0.4s' }}
               >
                 {i === current && (
                   <motion.span
@@ -516,7 +518,7 @@ const Hero = () => {
   return (
     <section
       onMouseMove={onMove}
-      className="relative min-h-screen overflow-hidden"
+      className="relative min-h-[100svh] lg:min-h-screen overflow-hidden"
       style={{ background: `linear-gradient(135deg, ${C.bgFrom} 0%, ${C.bgTo} 100%)` }}
     >
       {/* Static grid */}
@@ -525,27 +527,28 @@ const Hero = () => {
         style={{
           opacity: 0.06,
           backgroundImage: `linear-gradient(${C.ink} 1px, transparent 1px), linear-gradient(90deg, ${C.ink} 1px, transparent 1px)`,
-          backgroundSize: '56px 56px',
+          backgroundSize: '40px 40px',
           maskImage: 'radial-gradient(ellipse at 25% 50%, black 20%, transparent 75%)',
           WebkitMaskImage: 'radial-gradient(ellipse at 25% 50%, black 20%, transparent 75%)',
         }}
       />
 
-      {/* Mouse spotlight */}
+      {/* Mouse spotlight — desktop only */}
       <motion.div
         style={{ background: spotlight }}
-        className="absolute inset-0 pointer-events-none z-[1]"
+        className="absolute inset-0 pointer-events-none z-[1] hidden lg:block"
       />
 
       {/* Single soft orb */}
-      <div className="absolute top-10 left-[8%] w-[320px] h-[320px] rounded-full bg-[#E67E22]/10 blur-[110px] pointer-events-none" />
+      <div className="absolute top-10 left-[8%] w-[220px] lg:w-[320px] h-[220px] lg:h-[320px] rounded-full bg-[#E67E22]/10 blur-[90px] lg:blur-[110px] pointer-events-none" />
 
-      <div className="relative grid grid-cols-1 lg:grid-cols-[1.4fr_0.85fr] min-h-screen">
-        <div className="relative z-30 flex items-center px-6 lg:px-12 xl:px-20 pt-16 pb-12 lg:py-16">
+      <div className="relative grid grid-cols-1 lg:grid-cols-[1.4fr_0.85fr] min-h-[100svh] lg:min-h-screen">
+        {/* LEFT — text content */}
+        <div className="relative z-30 flex items-center px-5 sm:px-6 lg:px-12 xl:px-20 pt-24 sm:pt-28 lg:pt-16 pb-8 lg:py-16">
           <div className="w-full max-w-4xl">
             <h1
-              className="font-display font-extrabold leading-[1.02] tracking-tight mb-8"
-              style={{ fontSize: 'clamp(2.4rem, 5.2vw, 6rem)' }}
+              className="font-display font-extrabold leading-[1.02] tracking-tight mb-6 sm:mb-8"
+              style={{ fontSize: 'clamp(2rem, 8vw, 6rem)' }}
             >
               <div>
                 <SplitText text="Steel," delay={0.2} />
@@ -566,7 +569,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.75 }}
-              className="text-lg xl:text-xl leading-relaxed max-w-2xl mb-10"
+              className="text-sm sm:text-base lg:text-lg xl:text-xl leading-relaxed max-w-2xl mb-8 lg:mb-10"
               style={{ color: C.inkSoft }}
             >
               Storage tanks, reactors, process equipment, piping and structures — fabricated in our
@@ -577,7 +580,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9 }}
-              className="flex flex-wrap gap-4 items-center mb-12"
+              className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-stretch sm:items-center mb-8 lg:mb-12"
             >
               <PrimaryCTA to="/contact">Discuss Your Project</PrimaryCTA>
               <SecondaryCTA to="/products">Explore Capabilities</SecondaryCTA>
@@ -587,7 +590,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.05 }}
-              className="grid grid-cols-3 gap-8 max-w-xl"
+              className="grid grid-cols-3 gap-3 sm:gap-6 lg:gap-8 max-w-xl"
             >
               {STATS.map((s, i) => (
                 <Stat key={s.label} {...s} delay={1.1 + i * 0.12} />
@@ -596,9 +599,10 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="relative z-20 flex items-center px-8 py-12 lg:px-8 xl:px-12 lg:py-16">
+        {/* RIGHT — slider panel */}
+        <div className="relative z-20 flex items-center px-4 sm:px-6 lg:px-8 xl:px-12 pt-4 pb-10 lg:py-16">
           <div
-            className="absolute inset-0 lg:[clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)]"
+            className="absolute inset-0 hidden lg:block lg:[clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)]"
             style={{ background: `linear-gradient(180deg, ${C.navyPanel} 0%, #0D0D0F 100%)` }}
           />
           <div
@@ -609,9 +613,9 @@ const Hero = () => {
             }}
           />
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.3, ease: EASE }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: EASE }}
             className="relative w-full lg:pl-8"
           >
             <HeroSlider />
@@ -619,7 +623,7 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Scroll cue */}
+      {/* Scroll cue — desktop only */}
       <motion.a
         href="#ticker"
         animate={reduce ? undefined : { y: [0, 6, 0] }}
@@ -634,12 +638,12 @@ const Hero = () => {
 };
 
 /* ============================================================
-   TICKER BAND — dark, calm
+   TICKER BAND
    ============================================================ */
 const Ticker = () => (
   <section
     id="ticker"
-    className="relative bg-[#1C1C1F] text-white py-4 overflow-hidden border-y border-white/10"
+    className="relative bg-[#1C1C1F] text-white py-3 sm:py-4 overflow-hidden border-y border-white/10"
   >
     <Marquee items={tickerItems} duration={55} />
   </section>
@@ -688,7 +692,7 @@ const capabilities = [
 ];
 
 const Capabilities = () => (
-  <section className="relative py-24 lg:py-32 bg-[#0B1420] overflow-hidden">
+  <section className="relative py-16 sm:py-24 lg:py-32 bg-[#0B1420] overflow-hidden">
     <div
       className="absolute inset-0 opacity-[0.04] pointer-events-none"
       style={{
@@ -696,46 +700,45 @@ const Capabilities = () => (
         backgroundSize: '80px 80px',
       }}
     />
-    <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[140px] pointer-events-none" />
+    <div className="absolute top-1/3 right-0 w-[300px] lg:w-[500px] h-[300px] lg:h-[500px] bg-accent/10 rounded-full blur-[100px] lg:blur-[140px] pointer-events-none" />
 
     <div className="container-custom relative">
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: '-80px' }}
         variants={stagger}
-        className="max-w-3xl mb-16"
+        className="max-w-3xl mb-10 sm:mb-16"
       >
-        <motion.div variants={fadeUp} className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-px bg-accent" />
+        <motion.div variants={fadeUp} className="flex items-center gap-3 mb-4 sm:mb-6">
+          <div className="w-8 sm:w-12 h-px bg-accent" />
           <span className="eyebrow !mb-0">Our Capabilities</span>
         </motion.div>
         <motion.h2
           variants={fadeUp}
-          className="text-white text-4xl md:text-5xl lg:text-6xl font-display font-extrabold leading-[1.05] tracking-tight"
+          className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-extrabold leading-[1.05] tracking-tight"
         >
-          What we{' '}
-          <span className="text-accent">fabricate and execute.</span>
+          What we <span className="text-accent">fabricate and execute.</span>
         </motion.h2>
       </motion.div>
 
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: '-80px' }}
         variants={stagger}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7"
       >
         {capabilities.map((cap, i) => (
           <motion.div key={cap.title} variants={fadeUp}>
             <Link to={cap.path} className="block h-full">
               <TiltCard className="relative h-full" max={5}>
-                <div className="relative h-full overflow-hidden bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-md border border-white/10 group-hover:border-accent/60 p-8 transition-all duration-500">
+                <div className="relative h-full overflow-hidden bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-md border border-white/10 group-hover:border-accent/60 p-6 sm:p-7 lg:p-8 transition-all duration-500">
                   <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
                   <div className="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
 
                   <div
-                    className="absolute top-4 right-5 text-6xl font-display font-extrabold select-none transition-all duration-500 group-hover:scale-105"
+                    className="absolute top-4 right-5 text-5xl sm:text-6xl font-display font-extrabold select-none transition-all duration-500 group-hover:scale-105"
                     style={{
                       WebkitTextStroke: '1px rgba(255,255,255,0.10)',
                       WebkitTextFillColor: 'transparent',
@@ -744,12 +747,12 @@ const Capabilities = () => (
                     {String(i + 1).padStart(2, '0')}
                   </div>
 
-                  <div className="h-14 mb-5" />
+                  <div className="h-12 sm:h-14 mb-4 sm:mb-5" />
 
-                  <h3 className="text-white text-lg font-display font-bold mb-3 group-hover:text-accent transition-colors">
+                  <h3 className="text-white text-base sm:text-lg font-display font-bold mb-2 sm:mb-3 group-hover:text-accent transition-colors">
                     {cap.title}
                   </h3>
-                  <p className="text-white/60 text-sm leading-relaxed mb-5">{cap.desc}</p>
+                  <p className="text-white/60 text-sm leading-relaxed mb-4 sm:mb-5">{cap.desc}</p>
 
                   <span className="inline-flex items-center gap-2 text-accent text-xs font-bold tracking-[0.15em] uppercase group-hover:gap-3 transition-all">
                     View Details <ArrowRight size={14} />
@@ -759,10 +762,11 @@ const Capabilities = () => (
                 </div>
 
                 <div
-                  className="absolute top-6 left-6 w-14 h-14 bg-gradient-to-br from-accent to-orange-600 flex items-center justify-center shadow-xl shadow-accent/30 z-30 transition-transform duration-300 group-hover:rotate-3"
+                  className="absolute top-5 left-5 sm:top-6 sm:left-6 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-accent to-orange-600 flex items-center justify-center shadow-xl shadow-accent/30 z-30 transition-transform duration-300 group-hover:rotate-3"
                   style={{ transform: 'translateZ(45px)' }}
                 >
-                  <cap.Icon size={24} className="text-white" strokeWidth={2.2} />
+                  <cap.Icon size={20} className="sm:hidden text-white" strokeWidth={2.2} />
+                  <cap.Icon size={24} className="hidden sm:block text-white" strokeWidth={2.2} />
                   <div className="absolute inset-0 border border-white/25" />
                 </div>
               </TiltCard>
@@ -787,7 +791,7 @@ const industries = [
 ];
 
 const IndustriesSection = () => (
-  <section className="relative py-24 lg:py-32 bg-[#F5F6F8] overflow-hidden">
+  <section className="relative py-16 sm:py-24 lg:py-32 bg-[#F5F6F8] overflow-hidden">
     <div
       className="absolute inset-0 opacity-[0.035] pointer-events-none"
       style={{
@@ -795,23 +799,23 @@ const IndustriesSection = () => (
         backgroundSize: '80px 80px',
       }}
     />
-    <div className="absolute -top-20 -right-20 w-[420px] h-[420px] rounded-full bg-accent/10 blur-[100px] pointer-events-none" />
+    <div className="absolute -top-20 -right-20 w-[280px] lg:w-[420px] h-[280px] lg:h-[420px] rounded-full bg-accent/10 blur-[100px] pointer-events-none" />
 
     <div className="container-custom relative">
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: '-80px' }}
         variants={stagger}
-        className="max-w-3xl mb-14"
+        className="max-w-3xl mb-10 sm:mb-14"
       >
-        <motion.div variants={fadeUp} className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-px bg-accent" />
+        <motion.div variants={fadeUp} className="flex items-center gap-3 mb-4 sm:mb-6">
+          <div className="w-8 sm:w-12 h-px bg-accent" />
           <span className="eyebrow !mb-0">Industries We Serve</span>
         </motion.div>
         <motion.h2
           variants={fadeUp}
-          className="text-navy text-4xl md:text-5xl lg:text-6xl font-display font-extrabold leading-[1.05] tracking-tight"
+          className="text-navy text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-extrabold leading-[1.05] tracking-tight"
         >
           Where our <span className="text-accent">fabrication</span> goes to work.
         </motion.h2>
@@ -820,31 +824,31 @@ const IndustriesSection = () => (
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: '-80px' }}
         variants={stagger}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
       >
         {industries.map((ind) => (
           <motion.div key={ind.code} variants={fadeUp}>
             <TiltCard className="relative h-full" max={5} glare="rgba(230,126,34,0.10)">
-              <div className="relative h-full overflow-hidden bg-white border border-borderlight group-hover:border-accent p-7 transition-all duration-500">
+              <div className="relative h-full overflow-hidden bg-white border border-borderlight group-hover:border-accent p-5 sm:p-7 transition-all duration-500">
                 <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
                 <div className="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
 
-                <div className="absolute -right-3 -bottom-6 text-8xl font-display font-extrabold text-navy/[0.04] group-hover:text-accent/10 transition-colors select-none">
+                <div className="absolute -right-3 -bottom-6 text-7xl sm:text-8xl font-display font-extrabold text-navy/[0.04] group-hover:text-accent/10 transition-colors select-none">
                   {ind.code}
                 </div>
 
-                <div className="relative flex items-start gap-4 mb-5">
-                  <div className="w-14 h-14 flex-shrink-0" />
-                  <div className="flex-1 pt-1">
+                <div className="relative flex items-start gap-3 sm:gap-4 mb-4 sm:mb-5">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0" />
+                  <div className="flex-1 pt-0.5 sm:pt-1">
                     <span
                       className="text-[10px] text-accent font-bold tracking-[0.25em] uppercase block mb-1"
                       style={{ fontFamily: 'Rajdhani, sans-serif' }}
                     >
                       {ind.code}
                     </span>
-                    <h3 className="text-navy text-lg font-display font-bold group-hover:text-accent transition-colors">
+                    <h3 className="text-navy text-base sm:text-lg font-display font-bold group-hover:text-accent transition-colors">
                       {ind.title}
                     </h3>
                   </div>
@@ -855,10 +859,11 @@ const IndustriesSection = () => (
               </div>
 
               <div
-                className="absolute top-7 left-7 w-14 h-14 bg-navy group-hover:bg-accent flex items-center justify-center shadow-lg shadow-navy/25 z-30 transition-colors duration-300"
+                className="absolute top-5 left-5 sm:top-7 sm:left-7 w-12 h-12 sm:w-14 sm:h-14 bg-navy group-hover:bg-accent flex items-center justify-center shadow-lg shadow-navy/25 z-30 transition-colors duration-300"
                 style={{ transform: 'translateZ(40px)' }}
               >
-                <ind.Icon size={24} className="text-white" strokeWidth={2.2} />
+                <ind.Icon size={20} className="sm:hidden text-white" strokeWidth={2.2} />
+                <ind.Icon size={24} className="hidden sm:block text-white" strokeWidth={2.2} />
               </div>
             </TiltCard>
           </motion.div>
@@ -870,7 +875,7 @@ const IndustriesSection = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="mt-12 text-center"
+        className="mt-10 sm:mt-12 text-center"
       >
         <Link to="/industries" className="btn btn-outline">
           View All Industries <ArrowRight size={18} />
@@ -908,7 +913,7 @@ const processSteps = [
 
 const ProcessSection = () => {
   return (
-    <section className="relative py-24 lg:py-32 bg-[#050810] overflow-hidden">
+    <section className="relative py-16 sm:py-24 lg:py-32 bg-[#050810] overflow-hidden">
       <div
         className="absolute inset-0 opacity-[0.05] pointer-events-none"
         style={{
@@ -916,23 +921,23 @@ const ProcessSection = () => {
           backgroundSize: '60px 60px',
         }}
       />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[300px] bg-accent/15 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] lg:w-[700px] h-[240px] lg:h-[300px] bg-accent/15 rounded-full blur-[120px] lg:blur-[150px] pointer-events-none" />
 
       <div className="container-custom relative">
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
+          viewport={{ once: true, margin: '-80px' }}
           variants={stagger}
-          className="max-w-3xl mb-20"
+          className="max-w-3xl mb-12 sm:mb-16 lg:mb-20"
         >
-          <motion.div variants={fadeUp} className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-px bg-accent" />
+          <motion.div variants={fadeUp} className="flex items-center gap-3 mb-4 sm:mb-6">
+            <div className="w-8 sm:w-12 h-px bg-accent" />
             <span className="eyebrow !mb-0">How We Execute</span>
           </motion.div>
           <motion.h2
             variants={fadeUp}
-            className="text-white text-4xl md:text-5xl lg:text-6xl font-display font-extrabold leading-[1.05] tracking-tight"
+            className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-extrabold leading-[1.05] tracking-tight"
           >
             From drawing to <span className="text-accent">site, in four steps.</span>
           </motion.h2>
@@ -943,7 +948,7 @@ const ProcessSection = () => {
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
-            viewport={{ once: true, margin: '-100px' }}
+            viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 1.6, ease: 'easeInOut', delay: 0.2 }}
             className="absolute top-8 left-[6%] right-[6%] h-px bg-gradient-to-r from-accent via-orange-300 to-accent origin-left hidden lg:block"
           />
@@ -951,28 +956,29 @@ const ProcessSection = () => {
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
+            viewport={{ once: true, margin: '-80px' }}
             variants={stagger}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-6"
           >
             {processSteps.map((s, i) => (
               <motion.div key={s.title} variants={fadeUp} className="group relative">
-                <div className="relative w-16 h-16 mb-8">
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 mb-5 sm:mb-8">
                   <div
                     className="relative w-full h-full flex items-center justify-center bg-[#0B1420] border border-accent/60 group-hover:bg-accent transition-colors duration-300"
                     style={{ clipPath: ANGLE }}
                   >
-                    <s.Icon size={26} className="text-accent group-hover:text-white transition-colors" strokeWidth={2.1} />
+                    <s.Icon size={22} className="sm:hidden text-accent group-hover:text-white transition-colors" strokeWidth={2.1} />
+                    <s.Icon size={26} className="hidden sm:block text-accent group-hover:text-white transition-colors" strokeWidth={2.1} />
                   </div>
                   <span
-                    className="absolute -top-3 -right-3 text-[11px] font-bold text-accent"
+                    className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 text-[10px] sm:text-[11px] font-bold text-accent"
                     style={{ fontFamily: 'Rajdhani, sans-serif' }}
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
 
-                <h3 className="text-white text-xl font-display font-bold mb-3 group-hover:text-accent transition-colors">
+                <h3 className="text-white text-lg sm:text-xl font-display font-bold mb-2 sm:mb-3 group-hover:text-accent transition-colors">
                   {s.title}
                 </h3>
                 <p className="text-white/60 text-sm leading-relaxed">{s.desc}</p>
@@ -1016,7 +1022,7 @@ const trustPoints = [
 ];
 
 const WhyChooseUs = () => (
-  <section className="relative py-24 lg:py-32 bg-[#F5F6F8] overflow-hidden">
+  <section className="relative py-16 sm:py-24 lg:py-32 bg-[#F5F6F8] overflow-hidden">
     <div
       className="absolute inset-0 opacity-[0.035] pointer-events-none"
       style={{
@@ -1024,7 +1030,7 @@ const WhyChooseUs = () => (
         backgroundSize: '80px 80px',
       }}
     />
-    <div className="absolute bottom-0 left-1/4 w-[460px] h-[460px] rounded-full bg-accent/10 blur-[110px] pointer-events-none" />
+    <div className="absolute bottom-0 left-1/4 w-[300px] lg:w-[460px] h-[300px] lg:h-[460px] rounded-full bg-accent/10 blur-[100px] pointer-events-none" />
 
     <div className="container-custom relative">
       <motion.div
@@ -1032,16 +1038,16 @@ const WhyChooseUs = () => (
         whileInView="visible"
         viewport={{ once: true }}
         variants={stagger}
-        className="text-center max-w-3xl mx-auto mb-16"
+        className="text-center max-w-3xl mx-auto mb-10 sm:mb-16"
       >
-        <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mb-6">
-          <div className="w-12 h-px bg-accent" />
+        <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
+          <div className="w-8 sm:w-12 h-px bg-accent" />
           <span className="eyebrow !mb-0">Why Choose Us</span>
-          <div className="w-12 h-px bg-accent" />
+          <div className="w-8 sm:w-12 h-px bg-accent" />
         </motion.div>
         <motion.h2
           variants={fadeUp}
-          className="text-navy text-4xl md:text-5xl lg:text-6xl font-display font-extrabold leading-[1.05] tracking-tight"
+          className="text-navy text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-extrabold leading-[1.05] tracking-tight"
         >
           Three things we <span className="text-accent">don't compromise on.</span>
         </motion.h2>
@@ -1052,29 +1058,30 @@ const WhyChooseUs = () => (
         whileInView="visible"
         viewport={{ once: true }}
         variants={stagger}
-        className="grid grid-cols-1 md:grid-cols-3 gap-7"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-7"
       >
         {trustPoints.map((point, i) => (
-          <motion.div key={i} variants={fadeUp}>
+          <motion.div key={i} variants={fadeUp} className={i === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}>
             <TiltCard className="relative h-full" max={5} glare="rgba(230,126,34,0.10)">
-              <div className="relative h-full bg-white p-9 overflow-hidden border border-borderlight group-hover:border-accent transition-colors duration-500">
-                <div className="absolute -right-3 -top-4 text-[110px] leading-none font-display font-extrabold text-navy/[0.04] group-hover:text-accent/10 transition-colors select-none">
+              <div className="relative h-full bg-white p-6 sm:p-8 lg:p-9 overflow-hidden border border-borderlight group-hover:border-accent transition-colors duration-500">
+                <div className="absolute -right-3 -top-4 text-[80px] sm:text-[100px] lg:text-[110px] leading-none font-display font-extrabold text-navy/[0.04] group-hover:text-accent/10 transition-colors select-none">
                   {String(i + 1).padStart(2, '0')}
                 </div>
 
-                <div className="h-16 mb-6" />
+                <div className="h-14 sm:h-16 mb-4 sm:mb-6" />
 
-                <h3 className="relative text-navy text-xl font-display font-bold mb-4 group-hover:text-accent transition-colors">
+                <h3 className="relative text-navy text-lg sm:text-xl font-display font-bold mb-3 sm:mb-4 group-hover:text-accent transition-colors">
                   {point.title}
                 </h3>
                 <p className="relative text-steel text-sm leading-relaxed">{point.desc}</p>
               </div>
 
               <div
-                className="absolute top-9 left-9 w-16 h-16 bg-gradient-to-br from-navy to-[#14305f] group-hover:from-accent group-hover:to-orange-600 flex items-center justify-center shadow-lg shadow-navy/25 z-30 transition-colors duration-300"
+                className="absolute top-6 left-6 sm:top-9 sm:left-9 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-navy to-[#14305f] group-hover:from-accent group-hover:to-orange-600 flex items-center justify-center shadow-lg shadow-navy/25 z-30 transition-colors duration-300"
                 style={{ transform: 'translateZ(45px)' }}
               >
-                <point.Icon size={28} className="text-white" strokeWidth={2} />
+                <point.Icon size={22} className="sm:hidden text-white" strokeWidth={2} />
+                <point.Icon size={28} className="hidden sm:block text-white" strokeWidth={2} />
                 <div className="absolute inset-0 border border-white/15" />
               </div>
             </TiltCard>
@@ -1089,22 +1096,22 @@ const WhyChooseUs = () => (
    SECTION 6 — CLIENT STRIP
    ============================================================ */
 const ClienteleStrip = () => (
-  <section className="relative py-20 bg-white overflow-hidden border-t border-borderlight">
+  <section className="relative py-14 sm:py-20 bg-white overflow-hidden border-t border-borderlight">
     <div className="container-custom">
       <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={stagger}
-        className="max-w-3xl mb-12"
+        className="max-w-3xl mb-8 sm:mb-12"
       >
-        <motion.div variants={fadeUp} className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-px bg-accent" />
+        <motion.div variants={fadeUp} className="flex items-center gap-3 mb-4 sm:mb-6">
+          <div className="w-8 sm:w-12 h-px bg-accent" />
           <span className="eyebrow !mb-0">Our Clientele</span>
         </motion.div>
         <motion.h2
           variants={fadeUp}
-          className="text-navy text-3xl md:text-4xl lg:text-5xl font-display font-extrabold leading-[1.05] tracking-tight"
+          className="text-navy text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-extrabold leading-[1.05] tracking-tight"
         >
           Organisations we've <span className="text-accent">worked with.</span>
         </motion.h2>
@@ -1115,20 +1122,20 @@ const ClienteleStrip = () => (
         whileInView="visible"
         viewport={{ once: true }}
         variants={stagger}
-        className="grid grid-cols-2 md:grid-cols-4 gap-5"
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5"
       >
         {['/client-01.jpeg', '/client-02.jpeg', '/client-03.jpeg', '/client-04.jpeg'].map((logo, i) => (
           <motion.div key={i} variants={fadeUp}>
             <TiltCard className="relative" max={4} glare="rgba(230,126,34,0.10)">
-              <div className="relative overflow-hidden bg-[#F5F6F8] border border-borderlight group-hover:border-accent group-hover:bg-white transition-all duration-300 p-8 flex items-center justify-center min-h-[140px]">
+              <div className="relative overflow-hidden bg-[#F5F6F8] border border-borderlight group-hover:border-accent group-hover:bg-white transition-all duration-300 p-5 sm:p-8 flex items-center justify-center min-h-[110px] sm:min-h-[140px]">
                 <img
                   src={logo}
                   alt={`Client ${i + 1}`}
-                  className="max-h-16 max-w-[120px] object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                  className="max-h-12 sm:max-h-16 max-w-[100px] sm:max-w-[120px] object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
                   onError={(e) => (e.target.style.display = 'none')}
                 />
-                <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
-                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
+                <div className="absolute top-0 left-0 w-6 sm:w-8 h-6 sm:h-8 border-t-2 border-l-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
+                <div className="absolute bottom-0 right-0 w-6 sm:w-8 h-6 sm:h-8 border-b-2 border-r-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
               </div>
             </TiltCard>
           </motion.div>
@@ -1140,7 +1147,7 @@ const ClienteleStrip = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="mt-10 text-center"
+        className="mt-8 sm:mt-10 text-center"
       >
         <Link to="/clientele" className="btn btn-outline">
           View Clientele <ArrowRight size={18} />
@@ -1159,7 +1166,7 @@ const FinalCTA = () => {
   const bgY = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
 
   return (
-    <section ref={ref} className="relative py-28 lg:py-36 bg-[#050810] overflow-hidden">
+    <section ref={ref} className="relative py-20 sm:py-28 lg:py-36 bg-[#050810] overflow-hidden">
       <motion.div style={{ y: bgY }} className="absolute inset-0 -top-10 -bottom-10">
         <img
           src="/home-cta.jpeg"
@@ -1178,7 +1185,7 @@ const FinalCTA = () => {
         }}
       />
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[320px] bg-accent/20 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] lg:w-[700px] h-[220px] lg:h-[320px] bg-accent/20 rounded-full blur-[120px] lg:blur-[150px] pointer-events-none" />
 
       <div className="container-custom relative z-10 text-center">
         <motion.div
@@ -1188,7 +1195,7 @@ const FinalCTA = () => {
           variants={stagger}
           className="max-w-3xl mx-auto"
         >
-          <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mb-6">
+          <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
             <div
               className="w-7 h-4 bg-accent"
               style={{ clipPath: 'polygon(0% 100%, 100% 100%, 50% 0%)' }}
@@ -1203,19 +1210,19 @@ const FinalCTA = () => {
 
           <motion.h2
             variants={fadeUp}
-            className="text-white text-4xl md:text-5xl lg:text-7xl font-display font-extrabold leading-[1.05] tracking-tight mb-6"
+            className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-display font-extrabold leading-[1.05] tracking-tight mb-5 sm:mb-6"
           >
             Share your drawing.
             <br />
             <span className="text-accent">We'll review the scope.</span>
           </motion.h2>
 
-          <motion.p variants={fadeUp} className="text-white/60 text-lg mb-10 max-w-2xl mx-auto">
+          <motion.p variants={fadeUp} className="text-white/60 text-base sm:text-lg mb-8 sm:mb-10 max-w-2xl mx-auto px-2">
             Send us your GA drawings, specifications or BOQ — our team will respond within one
             working day.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-4 justify-center">
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center items-stretch sm:items-center">
             <PrimaryCTA to="/contact">Send an Enquiry</PrimaryCTA>
             <SecondaryCTA to="/products">View Capabilities</SecondaryCTA>
           </motion.div>
