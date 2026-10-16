@@ -28,32 +28,30 @@ import {
 const EASE = [0.22, 1, 0.36, 1];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 50, filter: 'blur(8px)' },
+  hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 0.8, ease: EASE },
+    transition: { duration: 0.7, ease: EASE },
   },
 };
 
 const stagger = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
+  visible: { transition: { staggerChildren: 0.1 } },
 };
 
 const wordReveal = {
-  hidden: { y: '110%', rotateX: -60, opacity: 0 },
+  hidden: { y: '100%', opacity: 0 },
   visible: {
     y: '0%',
-    rotateX: 0,
     opacity: 1,
-    transition: { duration: 0.9, ease: EASE },
+    transition: { duration: 0.8, ease: EASE },
   },
 };
 
 /* ============================================================
-   INDUSTRIES DATA — client images use kiye
+   INDUSTRIES DATA
    ============================================================ */
 const industries = [
   {
@@ -191,14 +189,14 @@ const Eyebrow = ({ children, light = false }) => (
   </div>
 );
 
-/* Scroll progress bar */
+/* Scroll progress bar — thinner, solid */
 const ScrollProgress = () => {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 25 });
   return (
     <motion.div
       style={{ scaleX }}
-      className="fixed top-0 left-0 right-0 h-[3px] origin-left bg-gradient-to-r from-accent via-orange-300 to-accent z-[100]"
+      className="fixed top-0 left-0 right-0 h-[2px] origin-left bg-accent z-[100]"
     />
   );
 };
@@ -227,11 +225,11 @@ const Counter = ({ to, suffix = '' }) => {
   );
 };
 
-/* Magnetic wrapper for buttons */
-const Magnetic = ({ children, strength = 0.35 }) => {
+/* Magnetic wrapper — subtle */
+const Magnetic = ({ children, strength = 0.2 }) => {
   const ref = useRef(null);
-  const x = useSpring(useMotionValue(0), { stiffness: 220, damping: 18 });
-  const y = useSpring(useMotionValue(0), { stiffness: 220, damping: 18 });
+  const x = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
+  const y = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
 
   const onMove = (e) => {
     const r = ref.current.getBoundingClientRect();
@@ -257,22 +255,22 @@ const Magnetic = ({ children, strength = 0.35 }) => {
 };
 
 /* ============================================================
-   3D TILT CARD
+   3D TILT CARD — calmer defaults
    ============================================================ */
-const TiltCard = ({ children, className = '' }) => {
+const TiltCard = ({ children, className = '', max = 6 }) => {
   const ref = useRef(null);
-  const rotateX = useSpring(useMotionValue(0), { stiffness: 180, damping: 20 });
-  const rotateY = useSpring(useMotionValue(0), { stiffness: 180, damping: 20 });
+  const rotateX = useSpring(useMotionValue(0), { stiffness: 180, damping: 22 });
+  const rotateY = useSpring(useMotionValue(0), { stiffness: 180, damping: 22 });
   const gx = useMotionValue(50);
   const gy = useMotionValue(50);
-  const glare = useMotionTemplate`radial-gradient(420px circle at ${gx}% ${gy}%, rgba(230,126,34,0.22), transparent 55%)`;
+  const glare = useMotionTemplate`radial-gradient(360px circle at ${gx}% ${gy}%, rgba(230,126,34,0.12), transparent 60%)`;
 
   const handleMove = (e) => {
     const r = ref.current.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width;
     const py = (e.clientY - r.top) / r.height;
-    rotateY.set((px - 0.5) * 16);
-    rotateX.set(-(py - 0.5) * 16);
+    rotateY.set((px - 0.5) * max);
+    rotateX.set(-(py - 0.5) * max);
     gx.set(px * 100);
     gy.set(py * 100);
   };
@@ -306,49 +304,6 @@ const TiltCard = ({ children, className = '' }) => {
 };
 
 /* ============================================================
-   3D WIREFRAME CUBE
-   ============================================================ */
-const WireCube = ({ size = 180 }) => {
-  const half = size / 2;
-  const faces = [
-    `rotateY(0deg) translateZ(${half}px)`,
-    `rotateY(90deg) translateZ(${half}px)`,
-    `rotateY(180deg) translateZ(${half}px)`,
-    `rotateY(-90deg) translateZ(${half}px)`,
-    `rotateX(90deg) translateZ(${half}px)`,
-    `rotateX(-90deg) translateZ(${half}px)`,
-  ];
-  return (
-    <div style={{ perspective: 900 }} className="relative">
-      <motion.div
-        animate={{ rotateX: [0, 360], rotateY: [0, 360] }}
-        transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-        style={{
-          width: size,
-          height: size,
-          transformStyle: 'preserve-3d',
-        }}
-        className="relative"
-      >
-        {faces.map((t, i) => (
-          <div
-            key={i}
-            className="absolute inset-0 border border-accent/60 bg-accent/[0.04] backdrop-blur-[1px]"
-            style={{ transform: t, boxShadow: 'inset 0 0 30px rgba(230,126,34,0.15)' }}
-          />
-        ))}
-        <motion.div
-          animate={{ rotateY: [0, -360], rotateZ: [0, 360] }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
-          className="absolute inset-[30%] border-2 border-blue-300/50"
-          style={{ transformStyle: 'preserve-3d' }}
-        />
-      </motion.div>
-    </div>
-  );
-};
-
-/* ============================================================
    INDUSTRIES PAGE
    ============================================================ */
 const Industries = () => {
@@ -357,34 +312,17 @@ const Industries = () => {
     target: heroRef,
     offset: ['start start', 'end start'],
   });
-  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.25]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '-12%']);
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.4]);
 
   const mx = useMotionValue(30);
   const my = useMotionValue(40);
-  const spotlight = useMotionTemplate`radial-gradient(600px circle at ${mx}% ${my}%, rgba(230,126,34,0.16), transparent 60%)`;
+  const spotlight = useMotionTemplate`radial-gradient(600px circle at ${mx}% ${my}%, rgba(230,126,34,0.12), transparent 60%)`;
   const onHeroMove = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
     mx.set(((e.clientX - r.left) / r.width) * 100);
     my.set(((e.clientY - r.top) / r.height) * 100);
   };
-
-  const cubeX = useSpring(useTransform(mx, [0, 100], [-20, 20]), { stiffness: 60, damping: 20 });
-  const cubeY = useSpring(useTransform(my, [0, 100], [-20, 20]), { stiffness: 60, damping: 20 });
-
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 28 }, () => ({
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        dur: 5 + Math.random() * 6,
-        delay: Math.random() * 5,
-        size: Math.random() > 0.7 ? 3 : 1.5,
-      })),
-    []
-  );
 
   const heroWords = ['Industries', 'we', 'serve'];
   const marquee = [...industries, ...industries];
@@ -399,8 +337,8 @@ const Industries = () => {
         onMouseMove={onHeroMove}
         className="relative min-h-[92vh] flex items-center overflow-hidden bg-[#050810]"
       >
-        {/* Parallax background — client-01 image */}
-        <motion.div style={{ y: bgY, scale: bgScale }} className="absolute inset-0 z-0">
+        {/* Parallax background */}
+        <motion.div style={{ y: bgY }} className="absolute inset-0 z-0 scale-105">
           <img
             src="/client-01.jpeg"
             alt="Industrial facility"
@@ -419,7 +357,7 @@ const Industries = () => {
                 'linear-gradient(to right, #050810 0%, rgba(5,8,16,0.92) 35%, rgba(5,8,16,0.55) 65%, rgba(5,8,16,0.35) 100%)',
             }}
           />
-          <div className="absolute inset-0 bg-blue-900/25 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-blue-900/20 mix-blend-overlay" />
         </motion.div>
 
         <motion.div
@@ -427,10 +365,9 @@ const Industries = () => {
           className="absolute inset-0 z-[1] pointer-events-none"
         />
 
-        <motion.div
-          animate={{ backgroundPosition: ['0px 0px', '60px 60px'] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-          className="absolute inset-0 z-[1] opacity-[0.07] pointer-events-none"
+        {/* Static grid */}
+        <div
+          className="absolute inset-0 z-[1] opacity-[0.06] pointer-events-none"
           style={{
             backgroundImage: `
               linear-gradient(rgba(120,180,255,0.6) 1px, transparent 1px),
@@ -440,10 +377,8 @@ const Industries = () => {
           }}
         />
 
-        <motion.div
-          initial={{ x: -120, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1.2, ease: EASE }}
+        {/* Static diagonal panel */}
+        <div
           className="absolute top-0 left-0 bottom-0 w-[60%] hidden lg:block z-[2] pointer-events-none"
           style={{
             background:
@@ -452,48 +387,11 @@ const Industries = () => {
           }}
         />
 
-        <motion.div
-          animate={{ opacity: [0.15, 0.32, 0.15], scale: [1, 1.2, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-accent/20 rounded-full blur-[130px] pointer-events-none z-[3]"
-        />
-        <motion.div
-          animate={{ opacity: [0.1, 0.25, 0.1], x: [0, 40, 0] }}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-10 right-10 w-[420px] h-[420px] bg-blue-500/20 rounded-full blur-[120px] pointer-events-none z-[3]"
-        />
-
-        {particles.map((p, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-blue-200/50 z-[3]"
-            style={{
-              left: `${p.left}%`,
-              top: `${p.top}%`,
-              width: p.size,
-              height: p.size,
-            }}
-            animate={{ y: [0, -60, 0], opacity: [0, 0.9, 0] }}
-            transition={{
-              duration: p.dur,
-              repeat: Infinity,
-              delay: p.delay,
-              ease: 'easeInOut',
-            }}
-          />
-        ))}
+        {/* Single soft glow instead of two pulsing orbs */}
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[130px] pointer-events-none z-[3]" />
 
         <motion.div
-          style={{ x: cubeX, y: cubeY }}
-          className="absolute right-[8%] top-1/2 -translate-y-1/2 hidden xl:block z-[4] opacity-90"
-        >
-          <WireCube size={190} />
-          <div className="absolute -inset-16 border border-accent/20 rounded-full animate-[spin_40s_linear_infinite]" />
-          <div className="absolute -inset-28 border border-blue-300/10 animate-[spin_60s_linear_infinite_reverse]" />
-        </motion.div>
-
-        <motion.div
-          style={{ opacity: heroOpacity, y: contentY }}
+          style={{ opacity: heroOpacity }}
           className="container-custom relative z-10 pt-44 pb-28"
         >
           <motion.div
@@ -522,16 +420,13 @@ const Industries = () => {
 
             <h1
               className="text-white font-display font-extrabold text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.98] tracking-tight mb-8 flex flex-wrap gap-x-5"
-              style={{ perspective: 800 }}
             >
               {heroWords.map((w, i) => (
                 <span key={i} className="overflow-hidden inline-block pb-2">
                   <motion.span
                     variants={wordReveal}
                     className={`inline-block origin-bottom ${
-                      i === 2
-                        ? 'text-transparent bg-clip-text bg-gradient-to-r from-accent via-orange-300 to-accent'
-                        : ''
+                      i === 2 ? 'text-accent' : ''
                     }`}
                   >
                     {w}
@@ -548,11 +443,11 @@ const Industries = () => {
               choice, cleanliness and safe erection matter.
             </motion.p>
 
-            <motion.div variants={fadeUp} className="mt-10 flex items-center gap-6">
+            <motion.div variants={fadeUp} className="mt-10">
               <Magnetic>
                 <a
                   href="#industries-grid"
-                  className="inline-flex items-center gap-3 px-7 py-4 bg-accent text-white text-sm font-bold tracking-wide shadow-lg shadow-accent/30"
+                  className="inline-flex items-center gap-3 px-7 py-4 bg-accent text-white text-sm font-bold tracking-wide shadow-lg shadow-accent/25 transition-colors hover:bg-accent/90"
                   style={{
                     clipPath:
                       'polygon(10px 0%, 100% 0%, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0% 100%, 0% 10px)',
@@ -562,21 +457,14 @@ const Industries = () => {
                   <ChevronDown size={18} />
                 </a>
               </Magnetic>
-
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                className="w-12 h-12 rounded-full border-2 border-accent/50 relative"
-              >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-accent rounded-full shadow-[0_0_12px_#E67E22]" />
-              </motion.div>
             </motion.div>
           </motion.div>
         </motion.div>
 
+        {/* Scroll cue — subtle, single direction */}
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2 text-white/40"
         >
           <span
@@ -607,7 +495,6 @@ const Industries = () => {
                 variants={fadeUp}
                 className="group relative px-6 py-8 lg:py-10 border-r border-white/10 last:border-r-0 overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-b from-accent/0 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative text-4xl lg:text-5xl font-display font-extrabold text-white">
                   <Counter to={s.value} suffix={s.suffix} />
                   <span className="text-accent">.</span>
@@ -625,22 +512,22 @@ const Industries = () => {
         </div>
       </section>
 
-      {/* MARQUEE */}
-      <section className="relative bg-[#0B1420] py-8 overflow-hidden border-b border-white/5">
+      {/* MARQUEE — calmer, smaller, slower */}
+      <section className="relative bg-[#0B1420] py-6 overflow-hidden border-b border-white/5">
         <motion.div
           animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
           className="flex gap-12 whitespace-nowrap w-max"
         >
           {marquee.map((ind, i) => (
             <div key={i} className="flex items-center gap-12">
               <span
-                className="text-2xl md:text-3xl font-display font-extrabold text-transparent uppercase tracking-wider"
-                style={{ WebkitTextStroke: '1px rgba(255,255,255,0.25)' }}
+                className="text-lg md:text-xl font-display font-semibold text-transparent uppercase tracking-[0.18em]"
+                style={{ WebkitTextStroke: '1px rgba(255,255,255,0.20)' }}
               >
                 {ind.title}
               </span>
-              <span className="w-2 h-2 bg-accent rotate-45" />
+              <span className="w-1.5 h-1.5 bg-accent/50 rotate-45" />
             </div>
           ))}
         </motion.div>
@@ -661,16 +548,8 @@ const Industries = () => {
             backgroundSize: '80px 80px',
           }}
         />
-        <motion.div
-          animate={{ opacity: [0.08, 0.18, 0.08] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[130px] pointer-events-none"
-        />
-        <motion.div
-          animate={{ opacity: [0.05, 0.14, 0.05] }}
-          transition={{ duration: 10, repeat: Infinity }}
-          className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-blue-500/15 rounded-full blur-[110px] pointer-events-none"
-        />
+        {/* Single static glow */}
+        <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="container-custom relative">
           <motion.div
@@ -688,9 +567,7 @@ const Industries = () => {
               className="text-white text-4xl md:text-5xl lg:text-6xl font-display font-extrabold leading-[1.05] tracking-tight"
             >
               Where our fabrication{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-300">
-                goes to work.
-              </span>
+              <span className="text-accent">goes to work.</span>
             </motion.h2>
           </motion.div>
 
@@ -703,13 +580,13 @@ const Industries = () => {
           >
             {industries.map((ind) => (
               <motion.div key={ind.code} variants={fadeUp} className="group relative">
-                <TiltCard className="relative h-full">
-                  <div className="relative h-full overflow-hidden bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-md border border-white/10 group-hover:border-accent/60 transition-all duration-500 group-hover:shadow-[0_30px_80px_-20px_rgba(230,126,34,0.35)]">
+                <TiltCard className="relative h-full" max={5}>
+                  <div className="relative h-full overflow-hidden bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-md border border-white/10 group-hover:border-accent/60 transition-all duration-500">
                     <div className="relative h-52 overflow-hidden bg-[#0a1428]">
                       <img
                         src={ind.image}
                         alt={ind.title}
-                        className="w-full h-full object-cover opacity-55 group-hover:opacity-85 group-hover:scale-110 transition-all duration-[900ms]"
+                        className="w-full h-full object-cover opacity-55 group-hover:opacity-85 group-hover:scale-105 transition-all duration-[900ms]"
                         onError={(e) =>
                           hideBrokenImg(
                             e,
@@ -718,8 +595,6 @@ const Industries = () => {
                         }
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0B1420] via-[#0B1420]/60 to-transparent" />
-
-                      <div className="absolute inset-0 -translate-x-[150%] group-hover:translate-x-[150%] bg-gradient-to-r from-transparent via-white/25 to-transparent -skew-x-[20deg] transition-transform duration-[1100ms] ease-out pointer-events-none" />
 
                       <div className="absolute top-4 right-4 px-3 py-1 bg-black/50 backdrop-blur-sm border border-accent/40">
                         <span
@@ -754,12 +629,8 @@ const Industries = () => {
                         </h4>
                         <ul className="space-y-2.5">
                           {ind.support.map((item, idx) => (
-                            <motion.li
+                            <li
                               key={idx}
-                              initial={{ opacity: 0, x: -14 }}
-                              whileInView={{ opacity: 1, x: 0 }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0.15 + idx * 0.07, duration: 0.5 }}
                               className="flex items-start gap-2.5 group/item"
                             >
                               <div className="w-3.5 h-3.5 border border-accent flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:bg-accent transition-colors">
@@ -769,10 +640,10 @@ const Industries = () => {
                                   strokeWidth={3}
                                 />
                               </div>
-                              <span className="text-white/65 text-xs group-hover/item:text-white group-hover/item:translate-x-1 transition-all">
+                              <span className="text-white/65 text-xs group-hover/item:text-white transition-colors">
                                 {item}
                               </span>
-                            </motion.li>
+                            </li>
                           ))}
                         </ul>
                       </div>
@@ -782,11 +653,11 @@ const Industries = () => {
                   </div>
 
                   <div
-                    className="absolute -top-4 -left-4 w-14 h-14 bg-gradient-to-br from-accent to-orange-600 flex items-center justify-center shadow-xl shadow-accent/50 z-30 group-hover:rotate-6 transition-transform duration-300"
-                    style={{ transform: 'translateZ(60px)' }}
+                    className="absolute -top-4 -left-4 w-14 h-14 bg-gradient-to-br from-accent to-orange-600 flex items-center justify-center shadow-xl shadow-accent/40 z-30 transition-transform duration-300 group-hover:rotate-3"
+                    style={{ transform: 'translateZ(45px)' }}
                   >
-                    <ind.Icon size={24} className="text-white" strokeWidth={2.3} />
-                    <div className="absolute inset-0 border border-white/30" />
+                    <ind.Icon size={24} className="text-white" strokeWidth={2.2} />
+                    <div className="absolute inset-0 border border-white/25" />
                   </div>
                 </TiltCard>
               </motion.div>
@@ -807,11 +678,8 @@ const Industries = () => {
             backgroundSize: '80px 80px',
           }}
         />
-        <motion.div
-          animate={{ y: [0, -30, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -top-20 -right-20 w-[420px] h-[420px] rounded-full bg-accent/10 blur-[100px] pointer-events-none"
-        />
+        {/* Static orb instead of animated */}
+        <div className="absolute -top-20 -right-20 w-[420px] h-[420px] rounded-full bg-accent/10 blur-[110px] pointer-events-none" />
 
         <div className="container-custom relative">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
@@ -844,7 +712,6 @@ const Industries = () => {
                 fabrication and execution discipline is built around that reality.
               </motion.p>
 
-              {/* Image — client-03 */}
               <motion.div
                 variants={fadeUp}
                 className="relative h-56 overflow-hidden border border-borderlight bg-navy/5 group"
@@ -856,7 +723,7 @@ const Industries = () => {
                 <img
                   src="/client-03.jpeg"
                   alt="Fabrication quality"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1200ms]"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1200ms]"
                   onError={(e) =>
                     hideBrokenImg(
                       e,
@@ -875,23 +742,12 @@ const Industries = () => {
               viewport={{ once: true }}
               variants={stagger}
               className="lg:col-span-7 space-y-5"
-              style={{ perspective: 1200 }}
             >
               {whyPoints.map((point) => (
                 <motion.div
                   key={point.n}
-                  variants={{
-                    hidden: { opacity: 0, x: 60, rotateY: -12 },
-                    visible: {
-                      opacity: 1,
-                      x: 0,
-                      rotateY: 0,
-                      transition: { duration: 0.8, ease: EASE },
-                    },
-                  }}
-                  whileHover={{ x: 10, rotateY: 3, scale: 1.015 }}
-                  transition={{ duration: 0.3 }}
-                  className="group relative flex gap-6 p-7 bg-white border border-borderlight hover:border-accent hover:shadow-2xl hover:shadow-accent/10 transition-all overflow-hidden"
+                  variants={fadeUp}
+                  className="group relative flex gap-6 p-7 bg-white border border-borderlight hover:border-accent hover:shadow-xl transition-all overflow-hidden"
                 >
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-500" />
                   <div className="absolute -right-6 -bottom-8 text-[120px] leading-none font-display font-extrabold text-navy/[0.04] select-none group-hover:text-accent/10 transition-colors">
@@ -900,7 +756,7 @@ const Industries = () => {
 
                   <div className="flex-shrink-0 relative">
                     <div
-                      className="text-4xl font-display font-extrabold transition-all duration-300 group-hover:scale-110"
+                      className="text-4xl font-display font-extrabold transition-transform duration-300 group-hover:scale-105"
                       style={{
                         WebkitTextStroke: '2px #E67E22',
                         WebkitTextFillColor: 'transparent',
@@ -929,7 +785,6 @@ const Industries = () => {
 
       {/* SECTION 4 — CTA */}
       <section className="relative py-28 lg:py-36 bg-[#0B1420] overflow-hidden">
-        {/* CTA background — client-04 */}
         <div className="absolute inset-0">
           <img
             src="/client-04.jpeg"
@@ -951,6 +806,7 @@ const Industries = () => {
           }}
         />
 
+        {/* Diagonal hatch pattern — static, no rings */}
         <div
           className="absolute top-0 right-0 bottom-0 w-[45%] hidden lg:block"
           style={{
@@ -961,17 +817,6 @@ const Industries = () => {
         >
           <div className="absolute inset-0 bg-[#0B1420]/40" />
         </div>
-
-        {[0, 1, 2].map((i) => (
-          <motion.div
-            key={i}
-            className="absolute right-[18%] top-1/2 w-40 h-40 rounded-full border border-accent/40 hidden lg:block"
-            initial={{ scale: 0.5, opacity: 0.6 }}
-            animate={{ scale: 3.2, opacity: 0 }}
-            transition={{ duration: 5, repeat: Infinity, delay: i * 1.6, ease: 'easeOut' }}
-            style={{ translateY: '-50%' }}
-          />
-        ))}
 
         <div className="container-custom relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -991,10 +836,7 @@ const Industries = () => {
               >
                 Tell us about
                 <br />
-                your{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-300">
-                  process requirement.
-                </span>
+                your <span className="text-accent">process requirement.</span>
               </motion.h2>
 
               <motion.p
@@ -1018,19 +860,19 @@ const Industries = () => {
                 <Magnetic>
                   <Link to="/contact">
                     <motion.div
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="relative inline-flex items-center gap-3 px-9 py-5 bg-accent text-white font-bold text-sm tracking-wide overflow-hidden group shadow-xl shadow-accent/30"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="relative inline-flex items-center gap-3 px-9 py-5 bg-accent text-white font-bold text-sm tracking-wide overflow-hidden group shadow-xl shadow-accent/25"
                       style={{
                         clipPath:
                           'polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px)',
                       }}
                     >
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                       <span className="relative">Send an Enquiry</span>
                       <ArrowRight
                         size={18}
-                        className="relative group-hover:translate-x-1.5 transition-transform"
+                        className="relative group-hover:translate-x-1 transition-transform"
                       />
                     </motion.div>
                   </Link>
@@ -1041,8 +883,8 @@ const Industries = () => {
                 <Magnetic>
                   <Link to="/products">
                     <motion.div
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.97 }}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
                       className="relative inline-flex items-center gap-3 px-9 py-5 border-2 border-white/30 text-white font-bold text-sm tracking-wide hover:bg-white/5 hover:border-accent transition-all backdrop-blur-sm"
                       style={{
                         clipPath:

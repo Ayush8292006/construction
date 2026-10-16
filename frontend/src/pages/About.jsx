@@ -40,110 +40,6 @@ const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.12 } }
 const inView = { initial: 'hidden', whileInView: 'visible', viewport: { once: true, margin: '-80px' }, variants: stagger };
 
 /* ============================================================
-   CURSOR PARTICLES
-   ============================================================ */
-const CursorParticles = ({ count = 40 }) => {
-  const reduce = useReducedMotion();
-  const particles = useMemo(
-    () =>
-      Array.from({ length: count }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: 1.2 + Math.random() * 2.2,
-        floatDur: 6 + Math.random() * 6,
-        floatDelay: Math.random() * 4,
-        opacity: 0.35 + Math.random() * 0.5,
-      })),
-    [count]
-  );
-
-  const mouseX = useMotionValue(-1000);
-  const mouseY = useMotionValue(-1000);
-
-  useEffect(() => {
-    if (reduce) return;
-    const handleMove = (e) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-    };
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
-  }, [mouseX, mouseY, reduce]);
-
-  if (reduce) return null;
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-[2]">
-      {particles.map((p) => (
-        <CursorParticle key={p.id} particle={p} mouseX={mouseX} mouseY={mouseY} />
-      ))}
-    </div>
-  );
-};
-
-const CursorParticle = ({ particle, mouseX, mouseY }) => {
-  const ref = useRef(null);
-  const offsetX = useMotionValue(0);
-  const offsetY = useMotionValue(0);
-  const springX = useSpring(offsetX, { stiffness: 90, damping: 16, mass: 0.4 });
-  const springY = useSpring(offsetY, { stiffness: 90, damping: 16, mass: 0.4 });
-
-  useEffect(() => {
-    const handleMove = (e) => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = cx - e.clientX;
-      const dy = cy - e.clientY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const radius = 150;
-      if (distance < radius && distance > 0) {
-        const force = (radius - distance) / radius;
-        offsetX.set((dx / distance) * force * 80);
-        offsetY.set((dy / distance) * force * 80);
-      } else {
-        offsetX.set(0);
-        offsetY.set(0);
-      }
-    };
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
-  }, [offsetX, offsetY]);
-
-  return (
-    <motion.div
-      ref={ref}
-      style={{
-        position: 'absolute',
-        left: `${particle.x}%`,
-        top: `${particle.y}%`,
-        x: springX,
-        y: springY,
-      }}
-    >
-      <motion.div
-        animate={{ y: [0, -28, 0], opacity: [0, particle.opacity, 0] }}
-        transition={{
-          duration: particle.floatDur,
-          repeat: Infinity,
-          delay: particle.floatDelay,
-          ease: 'easeInOut',
-        }}
-        className="rounded-full"
-        style={{
-          width: particle.size,
-          height: particle.size,
-          background: 'radial-gradient(circle, #F5D76E 0%, #E67E22 100%)',
-          boxShadow: '0 0 6px rgba(230,126,34,0.7)',
-        }}
-      />
-    </motion.div>
-  );
-};
-
-/* ============================================================
    SHARED PIECES
    ============================================================ */
 const Eyebrow = ({ children, dark = false }) => (
@@ -181,7 +77,7 @@ const Btn = ({ to, children, variant = 'primary', arrow = false }) => (
 );
 
 /* ============================================================
-   SPLIT TEXT
+   SPLIT TEXT — per-character entrance + hover effect RETAINED
    ============================================================ */
 const SplitText = ({ text, delay = 0, color = '#fff', hover = C.orange }) => {
   const reduce = useReducedMotion();
@@ -211,16 +107,16 @@ const SplitText = ({ text, delay = 0, color = '#fff', hover = C.orange }) => {
 };
 
 /* ============================================================
-   3D TILT CARD
+   3D TILT CARD — calmer defaults
    ============================================================ */
-const TiltCard = ({ children, className = '', max = 12, glare = 'rgba(230,126,34,0.2)' }) => {
+const TiltCard = ({ children, className = '', max = 6, glare = 'rgba(230,126,34,0.12)' }) => {
   const reduce = useReducedMotion();
   const ref = useRef(null);
-  const rx = useSpring(useMotionValue(0), { stiffness: 150, damping: 18 });
-  const ry = useSpring(useMotionValue(0), { stiffness: 150, damping: 18 });
+  const rx = useSpring(useMotionValue(0), { stiffness: 180, damping: 22 });
+  const ry = useSpring(useMotionValue(0), { stiffness: 180, damping: 22 });
   const gx = useMotionValue(50);
   const gy = useMotionValue(50);
-  const bg = useMotionTemplate`radial-gradient(320px circle at ${gx}% ${gy}%, ${glare}, transparent 60%)`;
+  const bg = useMotionTemplate`radial-gradient(300px circle at ${gx}% ${gy}%, ${glare}, transparent 60%)`;
 
   const move = (e) => {
     if (reduce) return;
@@ -252,45 +148,6 @@ const TiltCard = ({ children, className = '', max = 12, glare = 'rgba(230,126,34
           style={{ background: bg }}
         />
         {children}
-      </motion.div>
-    </div>
-  );
-};
-
-/* ============================================================
-   3D WIRE CUBE
-   ============================================================ */
-const WireCube = ({ size = 120 }) => {
-  const half = size / 2;
-  const faces = [
-    `rotateY(0deg) translateZ(${half}px)`,
-    `rotateY(90deg) translateZ(${half}px)`,
-    `rotateY(180deg) translateZ(${half}px)`,
-    `rotateY(-90deg) translateZ(${half}px)`,
-    `rotateX(90deg) translateZ(${half}px)`,
-    `rotateX(-90deg) translateZ(${half}px)`,
-  ];
-  return (
-    <div style={{ perspective: 900 }} className="relative">
-      <motion.div
-        animate={{ rotateX: [0, 360], rotateY: [0, 360] }}
-        transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
-        style={{ width: size, height: size, transformStyle: 'preserve-3d' }}
-        className="relative"
-      >
-        {faces.map((t, i) => (
-          <div
-            key={i}
-            className="absolute inset-0 border border-accent/60 bg-accent/[0.04]"
-            style={{ transform: t, boxShadow: 'inset 0 0 30px rgba(230,126,34,0.15)' }}
-          />
-        ))}
-        <motion.div
-          animate={{ rotateY: [0, -360], rotateZ: [0, 360] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-          className="absolute inset-[30%] border-2 border-orange-300/50"
-          style={{ transformStyle: 'preserve-3d' }}
-        />
       </motion.div>
     </div>
   );
@@ -333,12 +190,12 @@ const StatCounter = ({ value, suffix = '', label }) => {
 const About = () => {
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.3]);
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.4]);
 
   const mx = useMotionValue(25);
   const my = useMotionValue(50);
-  const spotlight = useMotionTemplate`radial-gradient(600px circle at ${mx}% ${my}%, rgba(230,126,34,0.18), transparent 60%)`;
+  const spotlight = useMotionTemplate`radial-gradient(600px circle at ${mx}% ${my}%, rgba(230,126,34,0.12), transparent 60%)`;
 
   const onHeroMove = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -371,12 +228,11 @@ const About = () => {
           />
         </motion.div>
 
-        <motion.div
-          animate={{ backgroundPosition: ['0px 0px', '56px 56px'] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+        {/* Static grid — no animation */}
+        <div
           className="absolute inset-0 z-[1] pointer-events-none"
           style={{
-            opacity: 0.07,
+            opacity: 0.06,
             backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
             backgroundSize: '56px 56px',
             maskImage: 'radial-gradient(ellipse at 25% 50%, black 20%, transparent 75%)',
@@ -389,32 +245,8 @@ const About = () => {
           className="absolute inset-0 z-[2] pointer-events-none"
         />
 
-        <CursorParticles count={50} />
-
-        <motion.div
-          animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.15, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-accent/25 rounded-full blur-[130px] pointer-events-none z-[3]"
-        />
-        <motion.div
-          animate={{ opacity: [0.15, 0.3, 0.15], x: [0, 40, 0] }}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-10 right-10 w-[400px] h-[400px] bg-orange-400/20 rounded-full blur-[120px] pointer-events-none z-[3]"
-        />
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.8, ease: EASE }}
-          className="absolute right-[6%] top-1/2 -translate-y-1/2 hidden xl:block z-[4] pointer-events-none"
-        >
-          <motion.div
-            animate={{ y: [0, -20, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <WireCube size={130} />
-          </motion.div>
-        </motion.div>
+        {/* Single static glow instead of two pulsing orbs */}
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[130px] pointer-events-none z-[3]" />
 
         <div className="container-custom relative z-10 pt-32 pb-20 w-full">
           <motion.div
@@ -487,7 +319,7 @@ const About = () => {
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#121214] to-transparent z-[5] pointer-events-none" />
       </section>
 
-      {/* ================= WHO WE ARE — BIG PADDING ================= */}
+      {/* ================= WHO WE ARE ================= */}
       <section
         className="relative py-32 md:py-40 lg:py-48 overflow-hidden"
         style={{ background: `linear-gradient(135deg, ${C.stone} 0%, ${C.stoneDark} 100%)` }}
@@ -519,16 +351,6 @@ const About = () => {
               >
                 Amit Engineering <span style={{ color: C.orange }}>Construction</span>
               </motion.h2>
-
-              <motion.div variants={fadeUp} className="mt-10 hidden lg:block">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                  className="w-16 h-16 rounded-full border-2 border-[#E67E22]/50 relative"
-                >
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-[#E67E22] rounded-full" />
-                </motion.div>
-              </motion.div>
             </div>
 
             <div className="lg:col-span-7">
@@ -571,7 +393,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* ================= CAPABILITIES — BIG PADDING ================= */}
+      {/* ================= CAPABILITIES ================= */}
       <section className="relative py-32 md:py-40 lg:py-48 overflow-hidden" style={{ background: C.inkDeep }}>
         <div
           className="absolute inset-0 opacity-[0.04] pointer-events-none"
@@ -581,11 +403,7 @@ const About = () => {
           }}
         />
 
-        <motion.div
-          animate={{ opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[130px] pointer-events-none"
-        />
+        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="container-custom relative">
           <motion.div {...inView} className="max-w-4xl mb-16">
@@ -596,9 +414,7 @@ const About = () => {
               style={{ fontSize: 'clamp(2rem, 4vw, 3.8rem)' }}
             >
               Shop fabrication and site execution{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-300">
-                under one team.
-              </span>
+              <span className="text-accent">under one team.</span>
             </motion.h2>
           </motion.div>
 
@@ -613,8 +429,8 @@ const About = () => {
             ].map((cap, i) => (
               <TiltCard key={cap.title} className="p-8 bg-white/[0.04] border border-white/10 hover:border-accent/60 transition-colors">
                 <div
-                  className="absolute top-4 right-5 text-6xl font-display font-extrabold select-none transition-all duration-500 group-hover:scale-110"
-                  style={{ WebkitTextStroke: '1px rgba(255,255,255,0.12)', WebkitTextFillColor: 'transparent' }}
+                  className="absolute top-4 right-5 text-6xl font-display font-extrabold select-none transition-all duration-500 group-hover:scale-105"
+                  style={{ WebkitTextStroke: '1px rgba(255,255,255,0.10)', WebkitTextFillColor: 'transparent' }}
                 >
                   {String(i + 1).padStart(2, '0')}
                 </div>
@@ -623,7 +439,7 @@ const About = () => {
                 <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-transparent group-hover:border-accent transition-colors" />
 
                 <motion.div
-                  style={{ z: 40 }}
+                  style={{ z: 30 }}
                   className="w-14 h-14 mb-6 flex items-center justify-center border border-accent/40 bg-accent/10 group-hover:bg-accent transition-colors duration-300"
                 >
                   <cap.icon size={24} strokeWidth={2} className="text-accent group-hover:text-white transition-colors" />
@@ -659,7 +475,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* ================= WORKING APPROACH — BIG PADDING ================= */}
+      {/* ================= WORKING APPROACH ================= */}
       <section className="relative py-32 md:py-40 lg:py-48 overflow-hidden" style={{ background: C.stoneDark }}>
         <div className="container-custom relative">
           <motion.div {...inView} className="max-w-4xl mb-16">
@@ -686,7 +502,7 @@ const About = () => {
                 <motion.div
                   key={s.n}
                   variants={fadeUp}
-                  whileHover={{ x: 8 }}
+                  whileHover={{ x: 6 }}
                   className="group flex gap-6 py-6 border-b border-[#1C1C1F]/15 hover:border-accent transition-colors"
                 >
                   <div className="font-display font-extrabold text-3xl text-[#1C1C1F]/25 group-hover:text-accent transition-colors w-12 flex-shrink-0">
@@ -722,9 +538,8 @@ const About = () => {
                 <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-accent" />
                 <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-accent" />
 
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                {/* Static badge instead of bobbing */}
+                <div
                   className="absolute bottom-6 left-6 p-5 shadow-2xl"
                   style={{ background: C.stoneCard }}
                 >
@@ -737,24 +552,22 @@ const About = () => {
                       <div className="text-xs tracking-wider uppercase mt-1" style={{ color: C.soft }}>Workforce</div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                <div
                   className="absolute top-6 right-6 p-5 shadow-2xl"
                   style={{ background: C.ink }}
                 >
                   <div className="text-xs tracking-wider uppercase mb-1" style={{ color: C.orange }}>On-Time</div>
                   <div className="text-white font-display font-bold text-lg">Execution</div>
-                </motion.div>
+                </div>
               </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ================= COMMITMENT — BIG PADDING ================= */}
+      {/* ================= COMMITMENT ================= */}
       <section className="relative py-32 md:py-40 lg:py-48 overflow-hidden" style={{ background: C.stone }}>
         <div className="container-custom">
           <motion.div {...inView} className="max-w-4xl mb-16">
@@ -795,6 +608,8 @@ const About = () => {
               <TiltCard
                 key={item.title}
                 className="p-8 border border-[#1C1C1F]/10 hover:border-accent hover:shadow-2xl transition-all duration-300"
+                max={5}
+                glare="rgba(230,126,34,0.10)"
               >
                 <div className="absolute inset-0 -z-10" style={{ background: C.stoneCard }} />
 
@@ -806,7 +621,7 @@ const About = () => {
                 </div>
 
                 <motion.div
-                  style={{ z: 40 }}
+                  style={{ z: 30 }}
                   className="w-16 h-16 mb-6 flex items-center justify-center bg-[#1C1C1F] group-hover:bg-accent transition-colors duration-300"
                 >
                   <item.icon size={28} strokeWidth={2} className="text-white" />
@@ -840,26 +655,7 @@ const About = () => {
           }}
         />
 
-        <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: 'linear-gradient(90deg, transparent, #E67E22, transparent)' }} />
-
-        <CursorParticles count={30} />
-
-        <div
-          className="absolute top-1/2 -translate-y-1/2 left-0 whitespace-nowrap font-display font-extrabold text-[16rem] leading-none select-none pointer-events-none opacity-[0.03]"
-          style={{ color: 'transparent', WebkitTextStroke: '1px #fff' }}
-        >
-          AMIT · AMIT · AMIT
-        </div>
-
-        {[0, 1, 2].map((i) => (
-          <motion.div
-            key={i}
-            className="absolute top-1/2 left-1/2 w-40 h-40 -ml-20 -mt-20 rounded-full border border-accent/40 pointer-events-none"
-            initial={{ scale: 0.5, opacity: 0.5 }}
-            animate={{ scale: 6, opacity: 0 }}
-            transition={{ duration: 7, repeat: Infinity, delay: i * 2.3, ease: 'easeOut' }}
-          />
-        ))}
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: 'linear-gradient(90deg, transparent, #E67E22, transparent)' }} />
 
         <div className="container-custom relative z-10 text-center">
           <motion.div {...inView}>

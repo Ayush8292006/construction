@@ -44,11 +44,11 @@ const navItems = [
     label: 'Products & Services',
     path: '/products',
     children: [
-      { label: 'Tanks & Process Equipment', desc: 'Storage tanks and process vessels', path: '/products/tanks-process-equipment', icon: Factory },
-      { label: 'Piping', desc: 'Fabrication and erection of piping systems', path: '/products/piping', icon: Workflow },
-      { label: 'Skids & Equipment Assemblies', desc: 'Pre-assembled, ready-to-install skids', path: '/products/skids-assemblies', icon: Boxes },
-      { label: 'Structural Fabrication', desc: 'Steel structures built to drawing', path: '/products/structural-fabrication', icon: Building2 },
-      { label: 'Mechanical Execution', desc: 'On-site installation and commissioning support', path: '/products/mechanical-execution', icon: Wrench },
+      { label: 'Tanks & Process Equipment', path: '/products/tanks-process-equipment', icon: Factory },
+      { label: 'Piping', path: '/products/piping', icon: Workflow },
+      { label: 'Skids & Equipment Assemblies', path: '/products/skids-assemblies', icon: Boxes },
+      { label: 'Structural Fabrication', path: '/products/structural-fabrication', icon: Building2 },
+      { label: 'Mechanical Execution', path: '/products/mechanical-execution', icon: Wrench },
     ],
   },
   { label: 'Industries', path: '/industries' },
@@ -61,7 +61,7 @@ const isPathActive = (pathname, to) =>
   to === '/' ? pathname === '/' : pathname.startsWith(to);
 
 /* ============================================================
-   LOGO — Premium Brown-Black Wordmark
+   LOGO — unchanged
    ============================================================ */
 const Logo = ({ reduce }) => {
   const [hovered, setHovered] = useState(false);
@@ -185,7 +185,6 @@ const Logo = ({ reduce }) => {
           ))}
       </motion.div>
 
-      {/* Wordmark — Premium Brown-Black */}
       <div className="leading-none hidden sm:block">
         <motion.div
           animate={{ backgroundPosition: hovered ? '200% center' : '0% center' }}
@@ -218,7 +217,7 @@ const Logo = ({ reduce }) => {
 };
 
 /* ============================================================
-   MAGNETIC CTA
+   MAGNETIC CTA — unchanged
    ============================================================ */
 const MagneticButton = ({ to, children, reduce }) => {
   const ref = useRef(null);
@@ -285,85 +284,7 @@ const MagneticButton = ({ to, children, reduce }) => {
 };
 
 /* ============================================================
-   MEGA MENU CARD
-   ============================================================ */
-const MegaCard = ({ child, index, reduce, onNavigate }) => {
-  const ref = useRef(null);
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const sx = useSpring(rx, { stiffness: 220, damping: 20 });
-  const sy = useSpring(ry, { stiffness: 220, damping: 20 });
-  const mx = useMotionValue(60);
-  const my = useMotionValue(40);
-  const glow = useMotionTemplate`radial-gradient(160px circle at ${mx}px ${my}px, rgba(230,126,34,0.28), transparent 70%)`;
-  const Icon = child.icon;
-
-  const onMove = (e) => {
-    const rect = ref.current.getBoundingClientRect();
-    const px = e.clientX - rect.left;
-    const py = e.clientY - rect.top;
-    mx.set(px);
-    my.set(py);
-    if (!reduce) {
-      ry.set((px / rect.width - 0.5) * 12);
-      rx.set(-(py / rect.height - 0.5) * 12);
-    }
-  };
-  const onLeave = () => {
-    rx.set(0);
-    ry.set(0);
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.08 + index * 0.06, duration: 0.35 }}
-      style={{ perspective: '700px' }}
-    >
-      <motion.div
-        ref={ref}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        style={{ rotateX: sx, rotateY: sy, transformStyle: 'preserve-3d' }}
-        className="relative h-full"
-      >
-        <Link
-          to={child.path}
-          onClick={onNavigate}
-          className="group/card relative flex h-full gap-3.5 p-4 rounded-lg border border-white/10 bg-white/[0.03] overflow-hidden hover:border-accent/60 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-        >
-          <motion.span
-            aria-hidden
-            className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
-            style={{ background: glow }}
-          />
-          <span
-            className="relative flex-shrink-0 w-10 h-10 grid place-items-center rounded-md bg-gradient-to-br from-accent/30 to-accent/5 border border-accent/30 text-accent group-hover/card:from-accent group-hover/card:to-accent-dark group-hover/card:text-white transition-all duration-300"
-            style={{ transform: 'translateZ(24px)' }}
-          >
-            <Icon size={18} />
-          </span>
-          <span className="relative min-w-0" style={{ transform: 'translateZ(14px)' }}>
-            <span className="flex items-center gap-1.5 text-sm font-semibold text-white group-hover/card:text-accent transition-colors">
-              {child.label}
-              <ArrowUpRight
-                size={13}
-                className="opacity-0 -translate-x-1 translate-y-1 group-hover/card:opacity-100 group-hover/card:translate-x-0 group-hover/card:translate-y-0 transition-all"
-              />
-            </span>
-            <span className="block mt-1 text-xs leading-relaxed text-white/60">
-              {child.desc}
-            </span>
-          </span>
-        </Link>
-      </motion.div>
-    </motion.div>
-  );
-};
-
-/* ============================================================
-   NAV ITEM — ALL WHITE (active is orange)
+   NAV ITEM — compact dropdown
    ============================================================ */
 const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
   const { pathname } = useLocation();
@@ -375,7 +296,7 @@ const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
     ? 'text-accent'
     : 'text-white hover:text-accent';
 
-  const pillBg = 'bg-gradient-to-b from-white/15 to-white/5 ring-1 ring-white/15';
+  const pillBg = 'bg-white/8 ring-1 ring-white/10';
 
   return (
     <div
@@ -403,7 +324,7 @@ const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
         {hovered === item.path && (
           <motion.span
             layoutId="navPill"
-            className={`absolute inset-0 rounded-md backdrop-blur-sm ${pillBg}`}
+            className={`absolute inset-0 rounded-md ${pillBg}`}
             transition={{ type: 'spring', stiffness: 380, damping: 30 }}
           />
         )}
@@ -412,7 +333,7 @@ const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
           <motion.span
             className="relative z-10"
             animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25 }}
           >
             <ChevronDown size={13} />
           </motion.span>
@@ -420,78 +341,63 @@ const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
         {active && (
           <motion.span
             layoutId="navActive"
-            className="absolute left-3.5 right-3.5 -bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-accent via-accent-light to-accent"
-            style={{ boxShadow: '0 0 12px #E67E22' }}
+            className="absolute left-3.5 right-3.5 -bottom-0.5 h-[2px] rounded-full bg-accent"
             transition={{ type: 'spring', stiffness: 380, damping: 30 }}
           />
         )}
       </NavLink>
 
-      {/* MEGA MENU */}
+      {/* COMPACT DROPDOWN */}
       {hasKids && (
         <AnimatePresence>
           {isOpen && (
-            <div
-              className="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-[min(860px,92vw)]"
-              style={{ perspective: '1200px' }}
-            >
+            <div className="absolute top-full left-0 pt-2 w-[280px]">
               <motion.div
-                initial={{ opacity: 0, y: -16, rotateX: reduce ? 0 : -18, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -12, rotateX: reduce ? 0 : -12, scale: 0.98 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                style={{ transformOrigin: 'top center' }}
-                className="relative overflow-hidden rounded-xl border border-accent/30 bg-navy-dark/95 backdrop-blur-2xl shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]"
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                className="relative overflow-hidden rounded-lg border border-white/10 bg-navy-dark/98 backdrop-blur-xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.8)]"
               >
-                <div className="h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent" />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 opacity-[0.07] pointer-events-none"
-                  style={{
-                    backgroundImage:
-                      'linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)',
-                    backgroundSize: '28px 28px',
-                  }}
-                />
-                <div className="relative grid grid-cols-[1fr_240px] gap-5 p-5">
-                  <div className="grid grid-cols-2 gap-3">
-                    {item.children.map((child, i) => (
-                      <MegaCard
-                        key={child.path}
-                        child={child}
-                        index={i}
-                        reduce={reduce}
-                        onNavigate={() => setOpen(null)}
-                      />
-                    ))}
-                  </div>
+                <div className="h-[2px] bg-gradient-to-r from-accent via-accent to-transparent" />
 
-                  <div className="flex flex-col justify-between rounded-lg p-5 bg-gradient-to-br from-accent/20 via-accent/5 to-transparent border border-accent/20">
-                    <div>
-                      <p className="text-white font-semibold leading-snug">
-                        Project ka drawing ya requirement hai?
-                      </p>
-                      <p className="mt-2 text-xs text-white/60 leading-relaxed">
-                        Share karein, hum scope aur timeline ke saath reply karenge.
-                      </p>
-                    </div>
-                    <div className="mt-5 space-y-2">
-                      <Link
-                        to="/contact"
-                        onClick={() => setOpen(null)}
-                        className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-gradient-to-r from-accent to-accent-dark text-white text-xs font-bold"
+                <div className="py-2">
+                  {item.children.map((child, i) => {
+                    const Icon = child.icon;
+                    return (
+                      <motion.div
+                        key={child.path}
+                        initial={{ opacity: 0, x: -6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.02 + i * 0.03, duration: 0.2 }}
                       >
-                        Request a quote <ArrowRight size={13} />
-                      </Link>
-                      <Link
-                        to="/products"
-                        onClick={() => setOpen(null)}
-                        className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/20 text-white/90 text-xs font-semibold hover:border-accent hover:text-accent transition-colors"
-                      >
-                        View all products
-                      </Link>
-                    </div>
-                  </div>
+                        <Link
+                          to={child.path}
+                          onClick={() => setOpen(null)}
+                          className="group/link flex items-center gap-3 px-4 py-2.5 text-sm text-white/85 hover:text-white hover:bg-white/[0.05] transition-colors"
+                        >
+                          <span className="flex-shrink-0 w-7 h-7 grid place-items-center rounded-md bg-white/[0.05] text-accent group-hover/link:bg-accent group-hover/link:text-white transition-colors">
+                            <Icon size={14} />
+                          </span>
+                          <span className="flex-1 truncate">{child.label}</span>
+                          <ArrowUpRight
+                            size={12}
+                            className="flex-shrink-0 opacity-0 -translate-x-1 group-hover/link:opacity-60 group-hover/link:translate-x-0 transition-all"
+                          />
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                <div className="border-t border-white/10 p-2">
+                  <Link
+                    to="/contact"
+                    onClick={() => setOpen(null)}
+                    className="flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-accent/10 text-accent text-xs font-semibold hover:bg-accent hover:text-white transition-colors"
+                  >
+                    Request a quote <ArrowRight size={12} />
+                  </Link>
                 </div>
               </motion.div>
             </div>
@@ -503,7 +409,7 @@ const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
 };
 
 /* ============================================================
-   FLOATING PARTICLES
+   FLOATING PARTICLES — unchanged
    ============================================================ */
 const FloatingParticles = () => {
   const particles = useMemo(
@@ -615,7 +521,6 @@ const Header = () => {
         onMouseLeave={() => hx.set(-300)}
         className="fixed top-0 left-0 right-0 z-50 bg-transparent"
       >
-        {/* Dark veil — appears on scroll */}
         <motion.div
           aria-hidden
           className="absolute inset-x-0 top-0 h-[150%] pointer-events-none bg-gradient-to-b from-navy-dark/70 via-navy/30 to-transparent backdrop-blur-xl"
