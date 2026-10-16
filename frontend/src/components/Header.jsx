@@ -61,11 +61,9 @@ const isPathActive = (pathname, to) =>
   to === '/' ? pathname === '/' : pathname.startsWith(to);
 
 /* ============================================================
-   LOGO — Route-aware colors
+   LOGO — Premium Brown-Black Wordmark
    ============================================================ */
 const Logo = ({ reduce }) => {
-  const { pathname } = useLocation();
-  const isHomePage = pathname === '/';
   const [hovered, setHovered] = useState(false);
   const ref = useRef(null);
 
@@ -187,17 +185,17 @@ const Logo = ({ reduce }) => {
           ))}
       </motion.div>
 
-      {/* Wordmark — Route-aware */}
+      {/* Wordmark — Premium Brown-Black */}
       <div className="leading-none hidden sm:block">
         <motion.div
           animate={{ backgroundPosition: hovered ? '200% center' : '0% center' }}
           transition={{ duration: 0.9 }}
-          className={`font-extrabold text-[15px] uppercase bg-clip-text text-transparent bg-[length:200%_auto] ${
-            isHomePage
-              ? 'bg-gradient-to-r from-[#1C1C1F] via-accent to-[#1C1C1F]'
-              : 'bg-gradient-to-r from-white via-accent-light to-white'
-          }`}
-          style={{ fontFamily: 'Orbitron, sans-serif', letterSpacing: '0.02em' }}
+          className="font-extrabold text-[15px] uppercase bg-clip-text text-transparent bg-[length:200%_auto] bg-gradient-to-r from-[#2C1810] via-[#5C3A21] to-[#1A0F0A]"
+          style={{
+            fontFamily: 'Orbitron, sans-serif',
+            letterSpacing: '0.02em',
+            filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.4))',
+          }}
         >
           Amit Engineering
         </motion.div>
@@ -208,9 +206,7 @@ const Logo = ({ reduce }) => {
             className="h-[2px] bg-gradient-to-r from-accent to-accent-light"
           />
           <span
-            className={`text-[9px] font-bold tracking-[0.25em] uppercase ${
-              isHomePage ? 'text-[#A8480A]' : 'text-accent'
-            }`}
+            className="text-[9px] text-accent font-bold tracking-[0.25em] uppercase"
             style={{ fontFamily: 'Rajdhani, sans-serif' }}
           >
             Fabrication · Erection
@@ -367,26 +363,19 @@ const MegaCard = ({ child, index, reduce, onNavigate }) => {
 };
 
 /* ============================================================
-   NAV ITEM — ROUTE-AWARE COLORS
+   NAV ITEM — ALL WHITE (active is orange)
    ============================================================ */
 const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
   const { pathname } = useLocation();
   const active = isPathActive(pathname, item.path);
-  const isHomePage = pathname === '/';
   const hasKids = !!item.children;
   const isOpen = open === item.path;
 
-  /* Route-aware text color */
   const textColor = active || isOpen
     ? 'text-accent'
-    : isHomePage
-    ? 'text-[#1C1C1F] hover:text-accent'
-    : 'text-white/90 hover:text-white';
+    : 'text-white hover:text-accent';
 
-  /* Route-aware pill background */
-  const pillBg = isHomePage
-    ? 'bg-[#1C1C1F]/[0.06] ring-1 ring-[#1C1C1F]/[0.08]'
-    : 'bg-gradient-to-b from-white/15 to-white/5 ring-1 ring-white/15';
+  const pillBg = 'bg-gradient-to-b from-white/15 to-white/5 ring-1 ring-white/15';
 
   return (
     <div
@@ -551,7 +540,6 @@ const FloatingParticles = () => {
 const Header = () => {
   const reduce = useReducedMotion();
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
 
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -617,11 +605,6 @@ const Header = () => {
 
   const hideNow = hidden && !mobileOpen && !open;
 
-  /* Route-aware veil color */
-  const veilColor = isHomePage
-    ? 'from-[#E2DDD3]/95 via-[#E2DDD3]/70 to-transparent'
-    : 'from-navy-dark/70 via-navy/30 to-transparent';
-
   return (
     <>
       <motion.header
@@ -632,9 +615,10 @@ const Header = () => {
         onMouseLeave={() => hx.set(-300)}
         className="fixed top-0 left-0 right-0 z-50 bg-transparent"
       >
+        {/* Dark veil — appears on scroll */}
         <motion.div
           aria-hidden
-          className={`absolute inset-x-0 top-0 h-[150%] pointer-events-none bg-gradient-to-b backdrop-blur-xl ${veilColor}`}
+          className="absolute inset-x-0 top-0 h-[150%] pointer-events-none bg-gradient-to-b from-navy-dark/70 via-navy/30 to-transparent backdrop-blur-xl"
           style={{
             WebkitMaskImage: 'linear-gradient(to bottom, #000 40%, transparent 100%)',
             maskImage: 'linear-gradient(to bottom, #000 40%, transparent 100%)',
@@ -678,13 +662,8 @@ const Header = () => {
               </MagneticButton>
             </nav>
 
-            {/* MOBILE TOGGLE — route-aware */}
             <button
-              className={`lg:hidden relative p-2.5 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
-                isHomePage
-                  ? 'text-[#1C1C1F] border border-[#1C1C1F]/20 bg-[#1C1C1F]/5'
-                  : 'text-white border border-white/15 bg-white/5'
-              }`}
+              className="lg:hidden relative text-white p-2.5 rounded-md border border-white/15 bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
