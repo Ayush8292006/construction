@@ -118,7 +118,8 @@ const FloatingInput = ({ icon: Icon, label, name, type = 'text', required, place
       <div
         className={`absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 transition-colors ${
           focused ? 'border-accent' : 'border-transparent'
-        }` />
+        }`}
+      />
 
       {/* Bottom animated bar */}
       <div
@@ -205,6 +206,7 @@ const FloatingSelect = ({ icon: Icon, label, name, required, options }) => {
         className={`absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 transition-colors ${
           focused ? 'border-accent' : 'border-transparent'
         }`}
+      />
 
       <div
         className={`absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-accent via-accent-light to-accent transition-all duration-500 ${
@@ -268,6 +270,7 @@ const FloatingTextarea = ({ label, name, required, placeholder, rows = 5 }) => {
         className={`absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 transition-colors ${
           focused ? 'border-accent' : 'border-transparent'
         }`}
+      />
 
       <div
         className={`absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-accent via-accent-light to-accent transition-all duration-500 ${
