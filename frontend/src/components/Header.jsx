@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 
 /* ============================================================
-   CONFIG — apna real data yahan daalo
+   CONFIG
    ============================================================ */
 const PHONE = '+91 XXXXX XXXXX';
 const EMAIL = 'info@yourdomain.com';
@@ -44,36 +44,11 @@ const navItems = [
     label: 'Products & Services',
     path: '/products',
     children: [
-      {
-        label: 'Tanks & Process Equipment',
-        desc: 'Storage tanks and process vessels',
-        path: '/products/tanks-process-equipment',
-        icon: Factory,
-      },
-      {
-        label: 'Piping',
-        desc: 'Fabrication and erection of piping systems',
-        path: '/products/piping',
-        icon: Workflow,
-      },
-      {
-        label: 'Skids & Equipment Assemblies',
-        desc: 'Pre-assembled, ready-to-install skids',
-        path: '/products/skids-assemblies',
-        icon: Boxes,
-      },
-      {
-        label: 'Structural Fabrication',
-        desc: 'Steel structures built to drawing',
-        path: '/products/structural-fabrication',
-        icon: Building2,
-      },
-      {
-        label: 'Mechanical Execution',
-        desc: 'On-site installation and commissioning support',
-        path: '/products/mechanical-execution',
-        icon: Wrench,
-      },
+      { label: 'Tanks & Process Equipment', desc: 'Storage tanks and process vessels', path: '/products/tanks-process-equipment', icon: Factory },
+      { label: 'Piping', desc: 'Fabrication and erection of piping systems', path: '/products/piping', icon: Workflow },
+      { label: 'Skids & Equipment Assemblies', desc: 'Pre-assembled, ready-to-install skids', path: '/products/skids-assemblies', icon: Boxes },
+      { label: 'Structural Fabrication', desc: 'Steel structures built to drawing', path: '/products/structural-fabrication', icon: Building2 },
+      { label: 'Mechanical Execution', desc: 'On-site installation and commissioning support', path: '/products/mechanical-execution', icon: Wrench },
     ],
   },
   { label: 'Industries', path: '/industries' },
@@ -86,9 +61,11 @@ const isPathActive = (pathname, to) =>
   to === '/' ? pathname === '/' : pathname.startsWith(to);
 
 /* ============================================================
-   LOGO — 3D tilt hexagon
+   LOGO — Route-aware colors
    ============================================================ */
 const Logo = ({ reduce }) => {
+  const { pathname } = useLocation();
+  const isHomePage = pathname === '/';
   const [hovered, setHovered] = useState(false);
   const ref = useRef(null);
 
@@ -129,14 +106,12 @@ const Logo = ({ reduce }) => {
         transition={{ duration: 0.3 }}
         className="relative w-12 h-12 flex-shrink-0"
       >
-        {/* Glow */}
         <motion.div
           animate={{ opacity: hovered ? 0.9 : 0.45, scale: hovered ? 1.5 : 1.2 }}
           transition={{ duration: 0.4 }}
           className="absolute inset-0 bg-accent rounded-lg blur-2xl"
         />
 
-        {/* Orbit ring */}
         {!reduce && (
           <motion.div
             animate={{ rotate: 360 }}
@@ -145,24 +120,20 @@ const Logo = ({ reduce }) => {
           />
         )}
 
-        {/* Hexagon stack (depth layers for 3D feel) */}
         <motion.div
           animate={{ z: hovered ? 36 : 0 }}
           transition={{ duration: 0.4 }}
           style={{ transformStyle: 'preserve-3d' }}
           className="relative w-full h-full"
         >
-          {/* back shadow layer */}
           <div
             className="absolute inset-0 bg-black/60 translate-y-1"
             style={{ clipPath: HEX, transform: 'translateZ(-10px) translateY(4px)' }}
           />
-          {/* outer hex */}
           <div
             className="absolute inset-0 bg-gradient-to-br from-accent-light via-accent to-navy"
             style={{ clipPath: HEX }}
           />
-          {/* inner hex + logo */}
           <div
             className="absolute inset-[3px] bg-gradient-to-br from-navy-dark to-navy flex items-center justify-center overflow-hidden"
             style={{ clipPath: HEX, transform: 'translateZ(8px)' }}
@@ -188,7 +159,6 @@ const Logo = ({ reduce }) => {
               AE
             </span>
           </div>
-          {/* shine sweep */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none"
             style={{ clipPath: HEX, transform: 'translateZ(12px)' }}
@@ -198,7 +168,6 @@ const Logo = ({ reduce }) => {
           />
         </motion.div>
 
-        {/* Sparks */}
         {hovered &&
           !reduce &&
           [...Array(6)].map((_, i) => (
@@ -218,12 +187,16 @@ const Logo = ({ reduce }) => {
           ))}
       </motion.div>
 
-      {/* Wordmark */}
+      {/* Wordmark — Route-aware */}
       <div className="leading-none hidden sm:block">
         <motion.div
           animate={{ backgroundPosition: hovered ? '200% center' : '0% center' }}
           transition={{ duration: 0.9 }}
-          className="font-extrabold text-[15px] uppercase bg-gradient-to-r from-white via-accent-light to-white bg-[length:200%_auto] bg-clip-text text-transparent"
+          className={`font-extrabold text-[15px] uppercase bg-clip-text text-transparent bg-[length:200%_auto] ${
+            isHomePage
+              ? 'bg-gradient-to-r from-[#1C1C1F] via-accent to-[#1C1C1F]'
+              : 'bg-gradient-to-r from-white via-accent-light to-white'
+          }`}
           style={{ fontFamily: 'Orbitron, sans-serif', letterSpacing: '0.02em' }}
         >
           Amit Engineering
@@ -235,7 +208,9 @@ const Logo = ({ reduce }) => {
             className="h-[2px] bg-gradient-to-r from-accent to-accent-light"
           />
           <span
-            className="text-[9px] text-accent font-bold tracking-[0.25em] uppercase"
+            className={`text-[9px] font-bold tracking-[0.25em] uppercase ${
+              isHomePage ? 'text-[#A8480A]' : 'text-accent'
+            }`}
             style={{ fontFamily: 'Rajdhani, sans-serif' }}
           >
             Fabrication · Erection
@@ -282,14 +257,12 @@ const MagneticButton = ({ to, children, reduce }) => {
         to={to}
         className="relative inline-flex overflow-hidden rounded-md p-[1.5px] shadow-[0_0_24px_-4px_rgba(230,126,34,0.6)] hover:shadow-[0_0_34px_-2px_rgba(230,126,34,0.85)] transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
       >
-        {/* rotating light along the border */}
         {!reduce && (
           <motion.span
             aria-hidden
             className="absolute -inset-[150%]"
             style={{
-              background:
-                'conic-gradient(from 0deg, transparent 0 70%, #F5A962 85%, #fff 100%)',
+              background: 'conic-gradient(from 0deg, transparent 0 70%, #F5A962 85%, #fff 100%)',
             }}
             animate={{ rotate: 360 }}
             transition={{ duration: 3.5, repeat: Infinity, ease: 'linear' }}
@@ -316,7 +289,7 @@ const MagneticButton = ({ to, children, reduce }) => {
 };
 
 /* ============================================================
-   MEGA MENU CARD — 3D tilt + cursor spotlight
+   MEGA MENU CARD
    ============================================================ */
 const MegaCard = ({ child, index, reduce, onNavigate }) => {
   const ref = useRef(null);
@@ -394,13 +367,26 @@ const MegaCard = ({ child, index, reduce, onNavigate }) => {
 };
 
 /* ============================================================
-   NAV ITEM (desktop) — sliding pill + mega menu
+   NAV ITEM — ROUTE-AWARE COLORS
    ============================================================ */
 const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
   const { pathname } = useLocation();
   const active = isPathActive(pathname, item.path);
+  const isHomePage = pathname === '/';
   const hasKids = !!item.children;
   const isOpen = open === item.path;
+
+  /* Route-aware text color */
+  const textColor = active || isOpen
+    ? 'text-accent'
+    : isHomePage
+    ? 'text-[#1C1C1F] hover:text-accent'
+    : 'text-white/90 hover:text-white';
+
+  /* Route-aware pill background */
+  const pillBg = isHomePage
+    ? 'bg-[#1C1C1F]/[0.06] ring-1 ring-[#1C1C1F]/[0.08]'
+    : 'bg-gradient-to-b from-white/15 to-white/5 ring-1 ring-white/15';
 
   return (
     <div
@@ -423,14 +409,12 @@ const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
         to={item.path}
         aria-haspopup={hasKids ? 'true' : undefined}
         aria-expanded={hasKids ? isOpen : undefined}
-        className={`relative flex items-center gap-1 px-3.5 py-2 text-sm font-medium rounded-md transition-colors [text-shadow:0_1px_14px_rgba(0,0,0,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
-          active || isOpen ? 'text-accent' : 'text-white/90 hover:text-white'
-        }`}
+        className={`relative flex items-center gap-1 px-3.5 py-2 text-sm font-medium rounded-md transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${textColor}`}
       >
         {hovered === item.path && (
           <motion.span
             layoutId="navPill"
-            className="absolute inset-0 rounded-md bg-gradient-to-b from-white/15 to-white/5 ring-1 ring-white/15 backdrop-blur-sm"
+            className={`absolute inset-0 rounded-md backdrop-blur-sm ${pillBg}`}
             transition={{ type: 'spring', stiffness: 380, damping: 30 }}
           />
         )}
@@ -530,7 +514,7 @@ const NavItem = ({ item, hovered, setHovered, open, setOpen, reduce }) => {
 };
 
 /* ============================================================
-   FLOATING PARTICLES (stable — no re-randomising on re-render)
+   FLOATING PARTICLES
    ============================================================ */
 const FloatingParticles = () => {
   const particles = useMemo(
@@ -567,6 +551,7 @@ const FloatingParticles = () => {
 const Header = () => {
   const reduce = useReducedMotion();
   const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -579,11 +564,9 @@ const Header = () => {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
 
-  /* cursor spotlight across the header */
   const hx = useMotionValue(-300);
   const spotlight = useMotionTemplate`radial-gradient(380px circle at ${hx}px 50%, rgba(230,126,34,0.12), transparent 70%)`;
 
-  /* scroll: compact state + hide on scroll down / show on scroll up */
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -596,14 +579,12 @@ const Header = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  /* close everything on route change */
   useEffect(() => {
     setMobileOpen(false);
     setMobileExpanded(false);
     setOpen(null);
   }, [location.pathname]);
 
-  /* body lock + Escape */
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     const onKey = (e) => {
@@ -619,7 +600,6 @@ const Header = () => {
     };
   }, [mobileOpen]);
 
-  /* auto-close mobile drawer when resizing to desktop */
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)');
     const onChange = (e) => e.matches && setMobileOpen(false);
@@ -637,6 +617,11 @@ const Header = () => {
 
   const hideNow = hidden && !mobileOpen && !open;
 
+  /* Route-aware veil color */
+  const veilColor = isHomePage
+    ? 'from-[#E2DDD3]/95 via-[#E2DDD3]/70 to-transparent'
+    : 'from-navy-dark/70 via-navy/30 to-transparent';
+
   return (
     <>
       <motion.header
@@ -647,10 +632,9 @@ const Header = () => {
         onMouseLeave={() => hx.set(-300)}
         className="fixed top-0 left-0 right-0 z-50 bg-transparent"
       >
-        {/* soft fade veil — no edge, dissolves into the page (only appears after scroll for readability) */}
         <motion.div
           aria-hidden
-          className="absolute inset-x-0 top-0 h-[150%] pointer-events-none bg-gradient-to-b from-navy-dark/70 via-navy/30 to-transparent backdrop-blur-xl"
+          className={`absolute inset-x-0 top-0 h-[150%] pointer-events-none bg-gradient-to-b backdrop-blur-xl ${veilColor}`}
           style={{
             WebkitMaskImage: 'linear-gradient(to bottom, #000 40%, transparent 100%)',
             maskImage: 'linear-gradient(to bottom, #000 40%, transparent 100%)',
@@ -659,7 +643,6 @@ const Header = () => {
           transition={{ duration: 0.5 }}
         />
 
-        {/* cursor spotlight */}
         {!reduce && (
           <motion.div
             aria-hidden
@@ -668,7 +651,6 @@ const Header = () => {
           />
         )}
 
-        {/* particles only at the top */}
         {!scrolled && !reduce && <FloatingParticles />}
 
         <div className="container-custom relative">
@@ -679,7 +661,6 @@ const Header = () => {
           >
             <Logo reduce={reduce} />
 
-            {/* DESKTOP NAV */}
             <nav className="hidden lg:flex items-center gap-1" aria-label="Main">
               {navItems.map((item) => (
                 <NavItem
@@ -697,9 +678,13 @@ const Header = () => {
               </MagneticButton>
             </nav>
 
-            {/* MOBILE TOGGLE */}
+            {/* MOBILE TOGGLE — route-aware */}
             <button
-              className="lg:hidden relative text-white p-2.5 rounded-md border border-white/15 bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+              className={`lg:hidden relative p-2.5 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
+                isHomePage
+                  ? 'text-[#1C1C1F] border border-[#1C1C1F]/20 bg-[#1C1C1F]/5'
+                  : 'text-white border border-white/15 bg-white/5'
+              }`}
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
@@ -720,7 +705,6 @@ const Header = () => {
           </motion.div>
         </div>
 
-        {/* scroll progress — weld line */}
         <motion.div
           aria-hidden
           style={{ scaleX: progress, boxShadow: '0 0 12px #E67E22' }}
@@ -729,7 +713,6 @@ const Header = () => {
         />
       </motion.header>
 
-      {/* MOBILE DRAWER — outside header so transforms don't trap `fixed` */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
