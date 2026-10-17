@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef } from 'react';
 import {
   motion,
   useMotionValue,
@@ -119,7 +119,7 @@ const safetyItems = [
 ];
 
 /* ============================================================
-   TILT WRAPPER — calmer
+   TILT WRAPPER
    ============================================================ */
 const Tilt = ({ children, className = '', max = 6 }) => {
   const ref = useRef(null);
@@ -160,7 +160,7 @@ const Tilt = ({ children, className = '', max = 6 }) => {
 };
 
 /* ============================================================
-   STATIC 3D GRID FLOOR (no animation)
+   GRID FLOOR
    ============================================================ */
 const GridFloor = ({ height = '55%' }) => (
   <div
@@ -178,15 +178,14 @@ const GridFloor = ({ height = '55%' }) => (
         `,
         backgroundSize: '60px 60px',
         maskImage: 'linear-gradient(to bottom, black 0%, transparent 75%)',
-        WebkitMaskImage:
-          'linear-gradient(to bottom, black 0%, transparent 75%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 75%)',
       }}
     />
   </div>
 );
 
 /* ============================================================
-   3D VISUAL PANEL — calm version (no scanner, no floating chips, no rotating icon)
+   VISUAL PANEL
    ============================================================ */
 const VisualPanel = ({ Icon, caption, chips = [] }) => (
   <Tilt max={5}>
@@ -194,7 +193,6 @@ const VisualPanel = ({ Icon, caption, chips = [] }) => (
       className="relative aspect-[4/3] overflow-hidden border border-white/10 bg-gradient-to-br from-[#0f2147] via-[#0a1428] to-[#050810] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]"
       style={{ transformStyle: 'preserve-3d' }}
     >
-      {/* blueprint grid */}
       <div
         className="absolute inset-0 opacity-20"
         style={{
@@ -207,7 +205,6 @@ const VisualPanel = ({ Icon, caption, chips = [] }) => (
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.20),transparent_65%)]" />
 
-      {/* Single static concentric ring set — no rotation */}
       <div
         className="absolute inset-0 flex items-center justify-center"
         style={{ perspective: 700, transformStyle: 'preserve-3d' }}
@@ -224,7 +221,6 @@ const VisualPanel = ({ Icon, caption, chips = [] }) => (
           />
         ))}
 
-        {/* Static centre icon block */}
         <div
           className="relative w-24 h-24 bg-accent flex items-center justify-center shadow-[0_0_50px_rgba(59,130,246,0.55)]"
           style={{ transformStyle: 'preserve-3d', transform: 'translateZ(40px)' }}
@@ -234,7 +230,6 @@ const VisualPanel = ({ Icon, caption, chips = [] }) => (
         </div>
       </div>
 
-      {/* Static chips — stacked bottom-left, no float */}
       {chips.length > 0 && (
         <div className="absolute top-5 left-5 flex flex-col gap-2 z-10">
           {chips.map((c) => (
@@ -250,7 +245,6 @@ const VisualPanel = ({ Icon, caption, chips = [] }) => (
         </div>
       )}
 
-      {/* caption */}
       <div className="absolute bottom-4 left-4 right-4 z-10">
         <div
           className="text-accent text-[10px] font-bold tracking-[0.25em] uppercase"
@@ -260,7 +254,6 @@ const VisualPanel = ({ Icon, caption, chips = [] }) => (
         </div>
       </div>
 
-      {/* corners */}
       <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-accent" />
       <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-accent" />
     </div>
@@ -268,22 +261,21 @@ const VisualPanel = ({ Icon, caption, chips = [] }) => (
 );
 
 /* ============================================================
-   FEATURE CARD (dark / light) — static icon, no shine sweep
+   FEATURE CARD — Full height consistency
    ============================================================ */
 const FeatureCard = ({ item, index, light = false }) => (
-  <motion.div variants={fadeUp}>
+  <motion.div variants={fadeUp} className="h-full">
     <Tilt max={5}>
       <div
-        className={`group relative h-full p-7 overflow-hidden transition-colors duration-500 ${
+        className={`group relative h-full p-7 overflow-hidden transition-colors duration-500 flex flex-col ${
           light
             ? 'bg-white border border-borderlight hover:border-accent shadow-[0_20px_50px_-25px_rgba(10,31,68,0.30)]'
             : 'bg-gradient-to-br from-white/[0.07] to-white/[0.015] backdrop-blur-md border border-white/10 hover:border-accent/60 shadow-[0_25px_50px_-25px_rgba(0,0,0,0.8)]'
         }`}
         style={{ transformStyle: 'preserve-3d' }}
       >
-        {/* number watermark */}
         <span
-          className={`absolute -right-1 -top-5 text-[110px] font-extrabold leading-none select-none transition-colors duration-500 ${
+          className={`absolute -right-2 -top-6 text-[110px] font-extrabold leading-none select-none transition-colors duration-500 pointer-events-none ${
             light
               ? 'text-navy/[0.04] group-hover:text-accent/10'
               : 'text-white/[0.04] group-hover:text-accent/10'
@@ -297,7 +289,7 @@ const FeatureCard = ({ item, index, light = false }) => (
         <div className="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
 
         <div
-          className={`relative w-14 h-14 flex items-center justify-center mb-5 transition-all duration-300 ${
+          className={`relative w-14 h-14 flex items-center justify-center mb-5 flex-shrink-0 transition-all duration-300 ${
             light
               ? 'bg-navy group-hover:bg-accent'
               : 'bg-accent/10 border border-accent/30 group-hover:bg-accent group-hover:border-accent'
@@ -316,7 +308,7 @@ const FeatureCard = ({ item, index, light = false }) => (
         </div>
 
         <h3
-          className={`relative text-lg font-display font-bold mb-3 group-hover:text-accent transition-colors ${
+          className={`relative text-lg font-display font-bold mb-3 group-hover:text-accent transition-colors leading-snug ${
             light ? 'text-navy' : 'text-white'
           }`}
           style={{ transform: 'translateZ(24px)' }}
@@ -324,7 +316,7 @@ const FeatureCard = ({ item, index, light = false }) => (
           {item.title}
         </h3>
         <p
-          className={`relative text-sm leading-relaxed ${
+          className={`relative text-sm leading-relaxed flex-1 ${
             light ? 'text-steel' : 'text-white/60'
           }`}
           style={{ transform: 'translateZ(14px)' }}
@@ -339,7 +331,7 @@ const FeatureCard = ({ item, index, light = false }) => (
 );
 
 /* ============================================================
-   SECTION HEADING TAG
+   SECTION TAG
    ============================================================ */
 const Tag = ({ children }) => (
   <motion.div variants={fadeUp} className="flex items-center gap-3 mb-6">
@@ -386,7 +378,7 @@ const QualitySafety = () => {
 
   return (
     <>
-      {/* SCROLL PROGRESS — thinner, solid */}
+      {/* SCROLL PROGRESS */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-[2px] bg-accent origin-left z-[100]"
         style={{ scaleX: scrollYProgress }}
@@ -402,7 +394,6 @@ const QualitySafety = () => {
         <GridBg size={60} opacity={0.05} />
         <GridFloor />
 
-        {/* Single static glow */}
         <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[130px] pointer-events-none" />
 
         <motion.div
@@ -462,7 +453,6 @@ const QualitySafety = () => {
           ============================================================ */}
       <section className="relative py-24 lg:py-32 bg-[#0B1420] overflow-hidden">
         <GridBg />
-        {/* Static glow */}
         <div className="absolute top-1/3 -right-32 w-[420px] h-[420px] rounded-full bg-accent/10 blur-[120px] pointer-events-none" />
 
         <div className="container-custom relative">
@@ -508,7 +498,7 @@ const QualitySafety = () => {
               whileInView="visible"
               viewport={{ once: true, margin: '-100px' }}
               variants={stagger}
-              className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6"
+              className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 h-fit"
             >
               {infraItems.map((item, i) => (
                 <FeatureCard key={i} item={item} index={i} />
@@ -523,7 +513,6 @@ const QualitySafety = () => {
           ============================================================ */}
       <section className="relative py-24 lg:py-32 bg-[#F5F6F8] overflow-hidden">
         <GridBg dark={false} opacity={0.03} />
-        {/* Static glow */}
         <div className="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full bg-accent/10 blur-[110px] pointer-events-none" />
 
         <div className="container-custom relative">
@@ -533,7 +522,7 @@ const QualitySafety = () => {
               whileInView="visible"
               viewport={{ once: true, margin: '-100px' }}
               variants={stagger}
-              className="lg:col-span-7 order-2 lg:order-1 grid grid-cols-1 sm:grid-cols-2 gap-6"
+              className="lg:col-span-7 order-2 lg:order-1 grid grid-cols-1 sm:grid-cols-2 gap-6 h-fit"
             >
               {qualityItems.map((item, i) => (
                 <FeatureCard key={i} item={item} index={i} light />
@@ -612,7 +601,6 @@ const QualitySafety = () => {
           ============================================================ */}
       <section className="relative py-24 lg:py-32 bg-[#0B1420] overflow-hidden">
         <GridBg />
-        {/* Static glow */}
         <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-accent/12 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="container-custom relative">
@@ -658,7 +646,7 @@ const QualitySafety = () => {
               whileInView="visible"
               viewport={{ once: true, margin: '-100px' }}
               variants={stagger}
-              className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6"
+              className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 h-fit"
             >
               {safetyItems.map((item, i) => (
                 <FeatureCard key={i} item={item} index={i} />
@@ -675,7 +663,6 @@ const QualitySafety = () => {
         <GridBg size={60} opacity={0.05} />
         <GridFloor height="70%" />
 
-        {/* Single static glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-accent/15 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="container-custom relative z-10 text-center">
