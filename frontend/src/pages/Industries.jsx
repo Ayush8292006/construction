@@ -189,7 +189,6 @@ const Eyebrow = ({ children, light = false }) => (
   </div>
 );
 
-/* Scroll progress bar — thinner, solid */
 const ScrollProgress = () => {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 25 });
@@ -201,7 +200,6 @@ const ScrollProgress = () => {
   );
 };
 
-/* Count-up number */
 const Counter = ({ to, suffix = '' }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-50px' });
@@ -225,7 +223,6 @@ const Counter = ({ to, suffix = '' }) => {
   );
 };
 
-/* Magnetic wrapper — subtle */
 const Magnetic = ({ children, strength = 0.2 }) => {
   const ref = useRef(null);
   const x = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
@@ -254,9 +251,6 @@ const Magnetic = ({ children, strength = 0.2 }) => {
   );
 };
 
-/* ============================================================
-   3D TILT CARD — calmer defaults
-   ============================================================ */
 const TiltCard = ({ children, className = '', max = 6 }) => {
   const ref = useRef(null);
   const rotateX = useSpring(useMotionValue(0), { stiffness: 180, damping: 22 });
@@ -331,13 +325,14 @@ const Industries = () => {
     <>
       <ScrollProgress />
 
-      {/* SECTION 1 — HERO */}
+      {/* ============================================================
+          SECTION 1 — HERO
+      ============================================================ */}
       <section
         ref={heroRef}
         onMouseMove={onHeroMove}
         className="relative min-h-[92vh] flex items-center overflow-hidden bg-[#050810]"
       >
-        {/* Parallax background */}
         <motion.div style={{ y: bgY }} className="absolute inset-0 z-0 scale-105">
           <img
             src="/client-01.jpeg"
@@ -365,7 +360,6 @@ const Industries = () => {
           className="absolute inset-0 z-[1] pointer-events-none"
         />
 
-        {/* Static grid */}
         <div
           className="absolute inset-0 z-[1] opacity-[0.06] pointer-events-none"
           style={{
@@ -377,7 +371,6 @@ const Industries = () => {
           }}
         />
 
-        {/* Static diagonal panel */}
         <div
           className="absolute top-0 left-0 bottom-0 w-[60%] hidden lg:block z-[2] pointer-events-none"
           style={{
@@ -387,7 +380,6 @@ const Industries = () => {
           }}
         />
 
-        {/* Single soft glow instead of two pulsing orbs */}
         <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[130px] pointer-events-none z-[3]" />
 
         <motion.div
@@ -418,9 +410,7 @@ const Industries = () => {
               <Eyebrow>Industries We Serve</Eyebrow>
             </motion.div>
 
-            <h1
-              className="text-white font-display font-extrabold text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.98] tracking-tight mb-8 flex flex-wrap gap-x-5"
-            >
+            <h1 className="text-white font-display font-extrabold text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.98] tracking-tight mb-8 flex flex-wrap gap-x-5">
               {heroWords.map((w, i) => (
                 <span key={i} className="overflow-hidden inline-block pb-2">
                   <motion.span
@@ -461,7 +451,6 @@ const Industries = () => {
           </motion.div>
         </motion.div>
 
-        {/* Scroll cue — subtle, single direction */}
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
@@ -479,7 +468,9 @@ const Industries = () => {
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B1420] to-transparent z-[5] pointer-events-none" />
       </section>
 
-      {/* STATS STRIP */}
+      {/* ============================================================
+          STATS STRIP
+      ============================================================ */}
       <section className="relative bg-[#0B1420] -mt-1 z-10">
         <div className="container-custom">
           <motion.div
@@ -512,7 +503,9 @@ const Industries = () => {
         </div>
       </section>
 
-      {/* MARQUEE — calmer, smaller, slower */}
+      {/* ============================================================
+          MARQUEE
+      ============================================================ */}
       <section className="relative bg-[#0B1420] py-6 overflow-hidden border-b border-white/5">
         <motion.div
           animate={{ x: ['0%', '-50%'] }}
@@ -533,7 +526,9 @@ const Industries = () => {
         </motion.div>
       </section>
 
-      {/* SECTION 2 — INDUSTRIES GRID */}
+      {/* ============================================================
+          SECTION 2 — INDUSTRIES GRID (Fixed Square Images)
+      ============================================================ */}
       <section
         id="industries-grid"
         className="relative py-24 lg:py-32 bg-[#0B1420] overflow-hidden"
@@ -548,7 +543,6 @@ const Industries = () => {
             backgroundSize: '80px 80px',
           }}
         />
-        {/* Single static glow */}
         <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="container-custom relative">
@@ -581,12 +575,15 @@ const Industries = () => {
             {industries.map((ind) => (
               <motion.div key={ind.code} variants={fadeUp} className="group relative">
                 <TiltCard className="relative h-full" max={5}>
-                  <div className="relative h-full overflow-hidden bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-md border border-white/10 group-hover:border-accent/60 transition-all duration-500">
-                    <div className="relative h-52 overflow-hidden bg-[#0a1428]">
+                  {/* Main card — flex column for consistent height */}
+                  <div className="relative h-full overflow-hidden bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-md border-2 border-white/10 group-hover:border-accent/60 transition-all duration-500 flex flex-col">
+
+                    {/* ===== IMAGE — Fixed aspect ratio ===== */}
+                    <div className="relative aspect-[4/3] overflow-hidden bg-[#0a1428] flex-shrink-0">
                       <img
                         src={ind.image}
                         alt={ind.title}
-                        className="w-full h-full object-cover opacity-55 group-hover:opacity-85 group-hover:scale-105 transition-all duration-[900ms]"
+                        className="absolute inset-0 w-full h-full object-cover object-center opacity-55 group-hover:opacity-85 group-hover:scale-105 transition-all duration-[900ms]"
                         onError={(e) =>
                           hideBrokenImg(
                             e,
@@ -596,7 +593,8 @@ const Industries = () => {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0B1420] via-[#0B1420]/60 to-transparent" />
 
-                      <div className="absolute top-4 right-4 px-3 py-1 bg-black/50 backdrop-blur-sm border border-accent/40">
+                      {/* Code badge */}
+                      <div className="absolute top-4 right-4 px-3 py-1 bg-black/60 backdrop-blur-sm border border-accent/40">
                         <span
                           className="text-accent text-[10px] font-bold tracking-[0.2em]"
                           style={{ fontFamily: 'Rajdhani, sans-serif' }}
@@ -605,22 +603,26 @@ const Industries = () => {
                         </span>
                       </div>
 
+                      {/* Title bottom */}
                       <div className="absolute bottom-4 left-5 right-5">
                         <h3 className="text-white text-xl font-display font-bold leading-tight">
                           {ind.title}
                         </h3>
                       </div>
 
+                      {/* Corner accents */}
                       <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
                       <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-accent/0 group-hover:border-accent transition-all duration-300" />
                     </div>
 
-                    <div className="p-6">
-                      <p className="text-white/60 text-sm leading-relaxed mb-5">
+                    {/* ===== CONTENT — flex-1 for full height ===== */}
+                    <div className="p-6 flex flex-col flex-1">
+                      <p className="text-white/60 text-sm leading-relaxed mb-5 line-clamp-3">
                         {ind.desc}
                       </p>
 
-                      <div className="border-t border-white/10 pt-4">
+                      {/* Support list — pushed to bottom */}
+                      <div className="border-t border-white/10 pt-4 mt-auto">
                         <h4
                           className="text-accent text-[10px] font-bold tracking-[0.3em] uppercase mb-3"
                           style={{ fontFamily: 'Rajdhani, sans-serif' }}
@@ -649,9 +651,11 @@ const Industries = () => {
                       </div>
                     </div>
 
+                    {/* Bottom line */}
                     <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent to-transparent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
                   </div>
 
+                  {/* Icon badge — floating */}
                   <div
                     className="absolute -top-4 -left-4 w-14 h-14 bg-gradient-to-br from-accent to-orange-600 flex items-center justify-center shadow-xl shadow-accent/40 z-30 transition-transform duration-300 group-hover:rotate-3"
                     style={{ transform: 'translateZ(45px)' }}
@@ -666,7 +670,9 @@ const Industries = () => {
         </div>
       </section>
 
-      {/* SECTION 3 — WHY INDUSTRIES CHOOSE US */}
+      {/* ============================================================
+          SECTION 3 — WHY INDUSTRIES CHOOSE US
+      ============================================================ */}
       <section className="relative py-24 lg:py-32 bg-[#F5F6F8] overflow-hidden">
         <div
           className="absolute inset-0 opacity-[0.035] pointer-events-none"
@@ -678,7 +684,6 @@ const Industries = () => {
             backgroundSize: '80px 80px',
           }}
         />
-        {/* Static orb instead of animated */}
         <div className="absolute -top-20 -right-20 w-[420px] h-[420px] rounded-full bg-accent/10 blur-[110px] pointer-events-none" />
 
         <div className="container-custom relative">
@@ -712,18 +717,15 @@ const Industries = () => {
                 fabrication and execution discipline is built around that reality.
               </motion.p>
 
+              {/* Fixed image aspect */}
               <motion.div
                 variants={fadeUp}
-                className="relative h-56 overflow-hidden border border-borderlight bg-navy/5 group"
-                style={{
-                  clipPath:
-                    'polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%)',
-                }}
+                className="relative aspect-[4/3] overflow-hidden border border-borderlight bg-navy/5 group"
               >
                 <img
                   src="/client-03.jpeg"
                   alt="Fabrication quality"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1200ms]"
+                  className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-[1200ms]"
                   onError={(e) =>
                     hideBrokenImg(
                       e,
@@ -783,7 +785,9 @@ const Industries = () => {
         </div>
       </section>
 
-      {/* SECTION 4 — CTA */}
+      {/* ============================================================
+          SECTION 4 — CTA
+      ============================================================ */}
       <section className="relative py-28 lg:py-36 bg-[#0B1420] overflow-hidden">
         <div className="absolute inset-0">
           <img
@@ -806,7 +810,6 @@ const Industries = () => {
           }}
         />
 
-        {/* Diagonal hatch pattern — static, no rings */}
         <div
           className="absolute top-0 right-0 bottom-0 w-[45%] hidden lg:block"
           style={{

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useMemo } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   motion,
@@ -13,7 +13,7 @@ import {
 } from 'framer-motion';
 import {
   ArrowRight, Award, Users, Factory, Target, ShieldCheck, Clock, Wrench,
-  CheckCircle2, Sparkles, TrendingUp, Layers, Cog,
+  CheckCircle2,
 } from 'lucide-react';
 
 /* ============================================================
@@ -37,7 +37,12 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
 };
 const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.12 } } };
-const inView = { initial: 'hidden', whileInView: 'visible', viewport: { once: true, margin: '-80px' }, variants: stagger };
+const inView = {
+  initial: 'hidden',
+  whileInView: 'visible',
+  viewport: { once: true, margin: '-80px' },
+  variants: stagger,
+};
 
 /* ============================================================
    SHARED PIECES
@@ -77,7 +82,7 @@ const Btn = ({ to, children, variant = 'primary', arrow = false }) => (
 );
 
 /* ============================================================
-   SPLIT TEXT — per-character entrance + hover effect RETAINED
+   SPLIT TEXT
    ============================================================ */
 const SplitText = ({ text, delay = 0, color = '#fff', hover = C.orange }) => {
   const reduce = useReducedMotion();
@@ -107,7 +112,7 @@ const SplitText = ({ text, delay = 0, color = '#fff', hover = C.orange }) => {
 };
 
 /* ============================================================
-   3D TILT CARD — calmer defaults
+   3D TILT CARD
    ============================================================ */
 const TiltCard = ({ children, className = '', max = 6, glare = 'rgba(230,126,34,0.12)' }) => {
   const reduce = useReducedMotion();
@@ -177,7 +182,7 @@ const StatCounter = ({ value, suffix = '', label }) => {
         {n}
         {suffix}
       </div>
-      <div className="text-xs md:text-sm mt-2 tracking-[0.15em] uppercase" style={{ color: C.soft, fontFamily: 'Rajdhani, sans-serif' }}>
+      <div className="text-xs md:text-sm mt-2 tracking-[0.15em] uppercase" style={{ color: 'rgba(255,255,255,0.6)', fontFamily: 'Rajdhani, sans-serif' }}>
         {label}
       </div>
     </motion.div>
@@ -212,7 +217,7 @@ const About = () => {
         className="relative min-h-[92vh] flex items-center overflow-hidden"
         style={{ background: C.ink }}
       >
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="absolute inset-0 z-0 scale-110">
+        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="absolute inset-0 z-0">
           <img
             src="/about-hero.jpeg"
             alt="Workshop"
@@ -228,7 +233,7 @@ const About = () => {
           />
         </motion.div>
 
-        {/* Static grid — no animation */}
+        {/* Grid pattern */}
         <div
           className="absolute inset-0 z-[1] pointer-events-none"
           style={{
@@ -240,12 +245,13 @@ const About = () => {
           }}
         />
 
+        {/* Spotlight */}
         <motion.div
           style={{ background: spotlight }}
           className="absolute inset-0 z-[2] pointer-events-none"
         />
 
-        {/* Single static glow instead of two pulsing orbs */}
+        {/* Glow */}
         <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[130px] pointer-events-none z-[3]" />
 
         <div className="container-custom relative z-10 pt-32 pb-20 w-full">
@@ -294,7 +300,7 @@ const About = () => {
               initial="hidden"
               animate="visible"
               variants={stagger}
-              className="flex flex-wrap gap-8 md:gap-12 pt-8 border-t border-white/10"
+              className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 border-t border-white/10"
             >
               {[
                 { value: 15, suffix: '+', label: 'Years Experience' },
@@ -321,7 +327,7 @@ const About = () => {
 
       {/* ================= WHO WE ARE ================= */}
       <section
-        className="relative py-32 md:py-40 lg:py-48 overflow-hidden"
+        className="relative py-24 md:py-32 lg:py-40 overflow-hidden"
         style={{ background: `linear-gradient(135deg, ${C.stone} 0%, ${C.stoneDark} 100%)` }}
       >
         <div
@@ -341,7 +347,7 @@ const About = () => {
         </div>
 
         <div className="container-custom relative">
-          <motion.div {...inView} className="grid lg:grid-cols-12 gap-12 lg:gap-16">
+          <motion.div {...inView} className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             <div className="lg:col-span-5">
               <Eyebrow>Who We Are</Eyebrow>
               <motion.h2
@@ -369,7 +375,7 @@ const About = () => {
 
               <motion.div
                 variants={fadeUp}
-                className="relative pl-6 border-l-4 py-2"
+                className="relative pl-6 border-l-4 py-2 mb-8"
                 style={{ borderColor: C.orange }}
               >
                 <div className="absolute -left-3 top-0 text-6xl font-display font-extrabold opacity-20 select-none" style={{ color: C.orange }}>
@@ -384,7 +390,7 @@ const About = () => {
                 </motion.p>
               </motion.div>
 
-              <motion.div variants={fadeUp} className="flex flex-wrap gap-4 mt-10">
+              <motion.div variants={fadeUp} className="flex flex-wrap gap-4">
                 <Btn to="/products" arrow>View Capabilities</Btn>
                 <Btn to="/contact" variant="outlineDark">Contact Us</Btn>
               </motion.div>
@@ -394,7 +400,7 @@ const About = () => {
       </section>
 
       {/* ================= CAPABILITIES ================= */}
-      <section className="relative py-32 md:py-40 lg:py-48 overflow-hidden" style={{ background: C.inkDeep }}>
+      <section className="relative py-24 md:py-32 lg:py-40 overflow-hidden" style={{ background: C.inkDeep }}>
         <div
           className="absolute inset-0 opacity-[0.04] pointer-events-none"
           style={{
@@ -406,7 +412,7 @@ const About = () => {
         <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="container-custom relative">
-          <motion.div {...inView} className="max-w-4xl mb-16">
+          <motion.div {...inView} className="max-w-4xl mb-14">
             <Eyebrow dark>Our Capabilities</Eyebrow>
             <motion.h2
               variants={fadeUp}
@@ -427,27 +433,30 @@ const About = () => {
               { icon: Clock, title: 'Shutdown Works', desc: 'Maintenance fabrication and shutdown execution under tight timelines.' },
               { icon: Award, title: 'Custom Fabrication', desc: 'Bespoke fabrication to client drawings, specifications and BOQs.' },
             ].map((cap, i) => (
-              <TiltCard key={cap.title} className="p-8 bg-white/[0.04] border border-white/10 hover:border-accent/60 transition-colors">
+              <TiltCard key={cap.title} className="relative p-8 bg-white/[0.04] border border-white/10 hover:border-accent/60 transition-colors">
+                {/* Big number top right */}
                 <div
-                  className="absolute top-4 right-5 text-6xl font-display font-extrabold select-none transition-all duration-500 group-hover:scale-105"
+                  className="absolute top-5 right-6 text-5xl font-display font-extrabold select-none leading-none pointer-events-none"
                   style={{ WebkitTextStroke: '1px rgba(255,255,255,0.10)', WebkitTextFillColor: 'transparent' }}
                 >
                   {String(i + 1).padStart(2, '0')}
                 </div>
 
+                {/* Corner accents */}
                 <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:border-accent transition-colors" />
                 <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-transparent group-hover:border-accent transition-colors" />
 
-                <motion.div
-                  style={{ z: 30 }}
-                  className="w-14 h-14 mb-6 flex items-center justify-center border border-accent/40 bg-accent/10 group-hover:bg-accent transition-colors duration-300"
-                >
+                {/* Icon */}
+                <div className="w-14 h-14 mb-6 flex items-center justify-center border border-accent/40 bg-accent/10 group-hover:bg-accent transition-colors duration-300">
                   <cap.icon size={24} strokeWidth={2} className="text-accent group-hover:text-white transition-colors" />
-                </motion.div>
-                <h3 className="text-white text-xl mb-3 font-display font-bold group-hover:text-accent transition-colors">
+                </div>
+
+                <h3 className="text-white text-xl mb-3 font-display font-bold group-hover:text-accent transition-colors pr-12">
                   {cap.title}
                 </h3>
-                <p className="text-white/60 text-sm xl:text-base leading-relaxed">{cap.desc}</p>
+                <p className="text-white/60 text-sm xl:text-base leading-relaxed">
+                  {cap.desc}
+                </p>
 
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent to-transparent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
               </TiltCard>
@@ -457,11 +466,11 @@ const About = () => {
       </section>
 
       {/* ================= STATS ================= */}
-      <section className="relative py-24 md:py-32 overflow-hidden" style={{ background: C.ink }}>
+      <section className="relative py-20 md:py-28 overflow-hidden" style={{ background: C.ink }}>
         <div className="container-custom">
           <motion.div
             {...inView}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-8 border-y border-white/10"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-10 border-y-2 border-white/15"
           >
             {[
               { value: 15, suffix: '+', label: 'Years of Experience' },
@@ -476,9 +485,9 @@ const About = () => {
       </section>
 
       {/* ================= WORKING APPROACH ================= */}
-      <section className="relative py-32 md:py-40 lg:py-48 overflow-hidden" style={{ background: C.stoneDark }}>
+      <section className="relative py-24 md:py-32 lg:py-40 overflow-hidden" style={{ background: C.stoneDark }}>
         <div className="container-custom relative">
-          <motion.div {...inView} className="max-w-4xl mb-16">
+          <motion.div {...inView} className="max-w-4xl mb-14">
             <Eyebrow>Our Working Approach</Eyebrow>
             <motion.h2
               variants={fadeUp}
@@ -489,7 +498,7 @@ const About = () => {
             </motion.h2>
           </motion.div>
 
-          <div className="grid lg:grid-cols-[1.3fr_0.7fr] gap-12 lg:gap-16">
+          <div className="grid lg:grid-cols-[1.3fr_0.7fr] gap-12 lg:gap-16 items-start">
             <motion.div {...inView}>
               {[
                 { n: '01', title: 'Drawing & Scope Review', desc: 'We study GA drawings, specifications and BOQs and clarify open points before quoting.' },
@@ -519,6 +528,7 @@ const About = () => {
               ))}
             </motion.div>
 
+            {/* IMAGE — Fixed aspect ratio + offset border */}
             <motion.div
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -526,40 +536,48 @@ const About = () => {
               transition={{ duration: 0.9, ease: EASE }}
               className="relative lg:sticky lg:top-32 lg:self-start"
             >
+              {/* Offset border */}
+              <div
+                className="absolute -top-3 -right-3 w-full h-full border-2 pointer-events-none"
+                style={{ borderColor: C.orange }}
+              />
+
               <div className="relative aspect-[4/5] overflow-hidden" style={{ background: C.ink }}>
                 <img
                   src="/about-process.jpeg"
                   alt="Fabrication process"
-                  className="w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover object-center"
                   onError={(e) => (e.currentTarget.style.display = 'none')}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#121214]/70 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#121214]/80 via-transparent to-transparent" />
 
+                {/* Corner accents */}
                 <div className="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-accent" />
                 <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-accent" />
 
-                {/* Static badge instead of bobbing */}
+                {/* Floating badge 1 — bottom left */}
                 <div
-                  className="absolute bottom-6 left-6 p-5 shadow-2xl"
+                  className="absolute bottom-6 left-6 p-5 shadow-2xl max-w-[200px]"
                   style={{ background: C.stoneCard }}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 flex items-center justify-center bg-accent/15">
+                    <div className="w-10 h-10 flex items-center justify-center bg-accent/15 flex-shrink-0">
                       <Users size={18} style={{ color: C.orange }} />
                     </div>
                     <div>
-                      <div className="text-2xl font-display font-extrabold leading-none" style={{ color: C.ink }}>Skilled</div>
-                      <div className="text-xs tracking-wider uppercase mt-1" style={{ color: C.soft }}>Workforce</div>
+                      <div className="text-xl font-display font-extrabold leading-none" style={{ color: C.ink }}>Skilled</div>
+                      <div className="text-[10px] tracking-wider uppercase mt-1" style={{ color: C.soft }}>Workforce</div>
                     </div>
                   </div>
                 </div>
 
+                {/* Floating badge 2 — top right */}
                 <div
-                  className="absolute top-6 right-6 p-5 shadow-2xl"
+                  className="absolute top-6 right-6 p-4 shadow-2xl"
                   style={{ background: C.ink }}
                 >
-                  <div className="text-xs tracking-wider uppercase mb-1" style={{ color: C.orange }}>On-Time</div>
-                  <div className="text-white font-display font-bold text-lg">Execution</div>
+                  <div className="text-[10px] tracking-wider uppercase mb-1" style={{ color: C.orange }}>On-Time</div>
+                  <div className="text-white font-display font-bold text-base whitespace-nowrap">Execution</div>
                 </div>
               </div>
             </motion.div>
@@ -568,9 +586,9 @@ const About = () => {
       </section>
 
       {/* ================= COMMITMENT ================= */}
-      <section className="relative py-32 md:py-40 lg:py-48 overflow-hidden" style={{ background: C.stone }}>
+      <section className="relative py-24 md:py-32 lg:py-40 overflow-hidden" style={{ background: C.stone }}>
         <div className="container-custom">
-          <motion.div {...inView} className="max-w-4xl mb-16">
+          <motion.div {...inView} className="max-w-4xl mb-14">
             <Eyebrow>Our Commitment</Eyebrow>
             <motion.h2
               variants={fadeUp}
@@ -584,7 +602,7 @@ const About = () => {
             </motion.p>
           </motion.div>
 
-          <motion.div {...inView} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <motion.div {...inView} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 icon: ShieldCheck,
@@ -607,28 +625,32 @@ const About = () => {
             ].map((item, i) => (
               <TiltCard
                 key={item.title}
-                className="p-8 border border-[#1C1C1F]/10 hover:border-accent hover:shadow-2xl transition-all duration-300"
+                className="relative p-8 border border-[#1C1C1F]/10 hover:border-accent hover:shadow-2xl transition-all duration-300"
                 max={5}
                 glare="rgba(230,126,34,0.10)"
               >
                 <div className="absolute inset-0 -z-10" style={{ background: C.stoneCard }} />
 
+                {/* Big outline number top right */}
                 <div
-                  className="absolute top-4 right-5 text-7xl font-display font-extrabold select-none"
+                  className="absolute top-4 right-5 text-6xl font-display font-extrabold select-none leading-none pointer-events-none"
                   style={{ WebkitTextStroke: `1.5px ${C.orange}`, WebkitTextFillColor: 'transparent', opacity: 0.15 }}
                 >
                   {String(i + 1).padStart(2, '0')}
                 </div>
 
-                <motion.div
-                  style={{ z: 30 }}
-                  className="w-16 h-16 mb-6 flex items-center justify-center bg-[#1C1C1F] group-hover:bg-accent transition-colors duration-300"
-                >
-                  <item.icon size={28} strokeWidth={2} className="text-white" />
-                </motion.div>
-                <h3 className="text-xl xl:text-2xl mb-4 font-display font-bold" style={{ color: C.ink }}>{item.title}</h3>
-                <p className="text-sm xl:text-base leading-relaxed mb-6" style={{ color: C.soft }}>{item.desc}</p>
-                <ul className="space-y-3">
+                {/* Icon top left */}
+                <div className="w-14 h-14 mb-6 flex items-center justify-center bg-[#1C1C1F] group-hover:bg-accent transition-colors duration-300">
+                  <item.icon size={26} strokeWidth={2} className="text-white" />
+                </div>
+
+                <h3 className="text-lg xl:text-xl mb-3 font-display font-bold pr-10" style={{ color: C.ink }}>
+                  {item.title}
+                </h3>
+                <p className="text-sm xl:text-base leading-relaxed mb-5" style={{ color: C.soft }}>
+                  {item.desc}
+                </p>
+                <ul className="space-y-2.5">
                   {item.points.map((p) => (
                     <li key={p} className="flex items-start gap-3">
                       <CheckCircle2 size={16} className="flex-shrink-0 mt-0.5" style={{ color: C.orange }} />
@@ -645,7 +667,7 @@ const About = () => {
       </section>
 
       {/* ================= CTA ================= */}
-      <section className="relative py-28 md:py-36 overflow-hidden" style={{ background: C.ink }}>
+      <section className="relative py-24 md:py-32 overflow-hidden" style={{ background: C.ink }}>
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
